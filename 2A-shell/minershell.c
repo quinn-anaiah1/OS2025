@@ -64,6 +64,10 @@ int main(int argc, char* argv[]) {
 
 		line[strlen(line)] = '\n'; //terminate with new line
 		tokens = tokenize(line); // tokenize the input string
+
+		if(tokens[0] == NULL){ //ignoring empty input
+			continue;
+		}
    
        //do whatever you want with the commands, here we just print them
 
@@ -78,7 +82,7 @@ int main(int argc, char* argv[]) {
 			}else if (pid==0){
 				printf("Child Process created successfully!\n");
 				if(execvp(tokens[0],tokens) == -1){//execute the command
-					perror("Command failed")
+					perror("Command failed");
 				}
 				exit(0);// Exit child process
 
