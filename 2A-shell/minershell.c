@@ -68,6 +68,11 @@ int main(int argc, char* argv[]) {
 		if(tokens[0] == NULL){ //ignoring empty input
 			continue;
 		}
+		if(tokens[0] =="exit"){ //handle ecit command
+			printf("Exiting shell..\n");
+			free(tokens);
+			break;
+		}
    
        //do whatever you want with the commands, here we just print them
 
