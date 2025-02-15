@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
 		if(tokens[0] == NULL){ //ignoring empty input
 			continue;
 		}
-		if(tokens[0] =="exit"){ //handle ecit command
+		if(strcmp(tokens[0],"exit") == 0){ //handle exit command
 			printf("Exiting shell..\n");
 			free(tokens);
 			break;
@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
 				printf("Fork failed");
 				perror("Fork failed");
 			}else if (pid==0){
-				printf("Child Process created successfully!\n");
+				//printf("Child Process created successfully!\n");
 				if(execvp(tokens[0],tokens) == -1){//execute the command
 					perror("Command failed");
 				}
