@@ -77,6 +77,9 @@ int main(int argc, char* argv[]) {
 				perror("Fork failed");
 			}else if (pid==0){
 				printf("Child Process created successfully!\n");
+				if(execvp(tokens[0],tokens) == -1){//execute the command
+					perror("Command failed")
+				}
 				exit(0);// Exit child process
 
 			}else {
