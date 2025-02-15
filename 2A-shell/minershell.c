@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 		scanf("%[^\n]", line);// read input until a newline is encountered
 		getchar(); // consume the new line character left in buffer
 
-		printf("Command entered: %s (remove this debug output later)\n", line);
+		//printf("Command entered: %s (remove this debug output later)\n", line);
 		/* END: TAKING INPUT */
 
 		line[strlen(line)] = '\n'; //terminate with new line
@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
        //do whatever you want with the commands, here we just print them
 
 		for(i=0;tokens[i]!=NULL;i++){
-			printf("found token %s (remove this debug output later)\n", tokens[i]);
+			//printf("found token %s (remove this debug output later)\n", tokens[i]);
 			// creating new process
 			pid_t pid =fork();
 
