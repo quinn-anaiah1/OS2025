@@ -78,23 +78,25 @@ int main(int argc, char* argv[]) {
 
 		for(i=0;tokens[i]!=NULL;i++){
 			//printf("found token %s (remove this debug output later)\n", tokens[i]);
-			// creating new process
-			pid_t pid =fork();
-
-			if(pid<0){
-				printf("Fork failed");
-				perror("Fork failed");
-			}else if (pid==0){
-				//printf("Child Process created successfully!\n");
-				if(execvp(tokens[0],tokens) == -1){//execute the command
-					perror("Command failed");
-				}
-				exit(0);// Exit child process
-
-			}else {
-				waitpid(pid, NULL, 0); // Parent waits for child
-			}
+			
+			
 		
+		}
+		// creating new process
+		pid_t pid =fork();
+
+		if(pid<0){
+			printf("Fork failed");
+			perror("Fork failed");
+		}else if (pid==0){
+			//printf("Child Process created successfully!\n");
+			if(execvp(tokens[0],tokens) == -1){//execute the command
+				perror("Command failed");
+			}
+			exit(0);// Exit child process
+
+		}else {
+			waitpid(pid, NULL, 0); // Parent waits for child
 		}
        
 		// Freeing the allocated memory	
