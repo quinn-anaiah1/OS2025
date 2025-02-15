@@ -73,6 +73,19 @@ int main(int argc, char* argv[]) {
 			free(tokens);
 			break;
 		}
+		//detect cd command
+		if(strcmp(tokens[0], "cd") ==0){
+			if(tokens[1] == NULL){ // if no directory provided
+				printf("Shell: Incorrect command");
+			}
+			else{
+				if(chdir(tokens[1]) !=0){ // change directory
+					perror("Shell"); // if change directory fails
+				}
+			}
+			free(tokens);
+			continue;// skip to next prompt
+		}
    
        //do whatever you want with the commands, here we just print them
 
