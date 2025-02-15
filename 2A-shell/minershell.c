@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
 		//detect cd command
 		if(strcmp(tokens[0], "cd") ==0){
 			if(tokens[1] == NULL){ // if no directory provided
-				printf("Shell: Incorrect command");
+				printf("Shell: Incorrect command\n");
 			}
 			else{
 				if(chdir(tokens[1]) !=0){ // change directory
