@@ -90,12 +90,12 @@ int main(int argc, char* argv[]) {
 		
 		//loop through and detect redirection commands
 		int inputI = -1;
-		int outputI = -1
+		int outputI = -1;
 		for(i=0;tokens[i]!=NULL;i++){
 			if(strcmp(tokens[i], "<")==0){
-				inputI=i //store index of reidrection input
+				inputI=i; //store index of reidrection input
 			}else if (strcmp(tokens[i], ">")==0){
-				outputI=i // store index of redirection output
+				outputI=i; // store index of redirection output
 			}
 		
 		}
