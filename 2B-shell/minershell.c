@@ -87,12 +87,16 @@ int main(int argc, char* argv[]) {
 			continue;// skip to next prompt
 		}
    
-       //do whatever you want with the commands, here we just print them
-
+		
+		//loop through and detect redirection commands
+		int inputI = -1;
+		int outputI = -1
 		for(i=0;tokens[i]!=NULL;i++){
-			//printf("found token %s (remove this debug output later)\n", tokens[i]);
-			
-			
+			if(strcmp(tokens[i], "<")==0){
+				inputI=i //store index of reidrection input
+			}else if (strcmp(tokens[i], ">")==0){
+				outputI=i // store index of redirection output
+			}
 		
 		}
 		// creating new process
