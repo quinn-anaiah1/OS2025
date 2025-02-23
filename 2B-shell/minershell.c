@@ -192,7 +192,7 @@ int main(int argc, char* argv[]) {
 			// for (int i = 1; cmd[i] != NULL; i++) {
     		// 	printf("  Argument[%d]: %s\n", i, cmd[i]);
 			// }
-			printf("Executing: %s\n", cmd[0]);
+			printf("Executing: %s\n", tokens[0]);
 			if(execvp(tokens[0],tokens) == -1){//execute the commandA
 				perror("Command failed");
 			}
