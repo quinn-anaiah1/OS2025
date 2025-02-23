@@ -174,8 +174,13 @@ int main(int argc, char* argv[]) {
 					perror("Error opening output file");
 					exit(1);
 				}
-				dup2(fd_out, STDOUT_FILENO); //redirect standard output to file
-				dup2(fd_out, STDERR_FILENO);
+				if(dup2(fd_out, STDOUT_FILENO)> 0){
+					perror("Error redirecting file");
+					exit(1);
+
+				}
+				 //redirect standard output to file
+				//dup2(fd_out, STDERR_FILENO);
 				close(fd_out);//close file
 
 			}
@@ -185,7 +190,7 @@ int main(int argc, char* argv[]) {
 			// for (int i = 1; cmd[i] != NULL; i++) {
     		// 	printf("  Argument[%d]: %s\n", i, cmd[i]);
 			// }
-
+			fprintf(stderr, "Executing: %s\n", cmd[0]);
 			if(execvp(cmd[0],cmd) == -1){//execute the commandA
 				perror("Command failed");
 			}
