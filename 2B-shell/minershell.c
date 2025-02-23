@@ -148,23 +148,28 @@ int main(int argc, char* argv[]) {
 				dup2(pipe_fds[1],STDOUT_FILENO);//redirect standard out to pipe write end
 				close(pipe_fds[1]);//closse write end after redirecting
 
-				execvp(leftCmd[0], leftCmd);
-    			perror("execvp"); // If execvp fails
-    			exit(1);
+				if (execvp(leftCmd[0], leftCmd)==-1){
+					perror("execvp"); // If execvp fails
+    				exit(1);
+				}
+    			
 			}
 			// right command
 			pid_t pid_R = fork();
 			
 			if(pid_R<0){
-				perror("Left fork failed");
+				perror("Right fork failed");
 			}else if (pid_R ==0){
 				close(pipe_fds[1]);//close write end in of pipe
 				dup2(pipe_fds[0],STDIN_FILENO);//redirect standard input to pipe read end
 				close(pipe_fds[0]);//closse wred end after redirecting
 
-				execvp(rightCmd[0], rightCmd);
-    			perror("execvp"); // If execvp fails
-    			exit(1);
+				if(execvp(rightCmd[0], rightCmd)== -1){
+					perror("execvp failed for write command"); // If execvp fails
+    				exit(1);
+				};
+
+    			
 			}
 			close(pipe_fds[0]); // Close both ends in parent
             close(pipe_fds[1]);
