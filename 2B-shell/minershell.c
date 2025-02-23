@@ -146,7 +146,7 @@ int main(int argc, char* argv[]) {
 
 			}
 			if(outputFile!=NULL){ // if  output file detected // create if doesnt exist, if exist, truncate and overwrite
-				int fd_out = open(outputFile, O_RDWR |O_CREAT | O_TRUNC, 0644); // open file in write only, store file descriptor
+				int fd_out = open(outputFile, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 				if(fd_out<0){//error dectection
 					perror("Error opening output file");
 					exit(1);
