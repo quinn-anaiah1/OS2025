@@ -151,7 +151,8 @@ int main(int argc, char* argv[]) {
 					perror("Error opening output file");
 					exit(1);
 				}
-				dup2(fd_out,1); //redirect standard output to file
+				dup2(fd_out, STDOUT_FILENO); //redirect standard output to file
+				dup2(fd_out, STDERR_FILENO);
 				//close(fd_out);//close file
 
 			}
