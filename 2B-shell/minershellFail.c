@@ -5,7 +5,6 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <fcntl.h>
-#include <stdbool.h>
 
 #define MAX_INPUT_SIZE 1024 //Maximum size of the input
 #define MAX_TOKEN_SIZE 64 // Maximum size of a single token
@@ -90,17 +89,22 @@ int main(int argc, char* argv[]) {
 		}
    
 		
-		//loop through and detect pipe command
-		
-		int pipeI = -1;
+		//loop through and detect redirection commands
+		int inputI = -1;
+		int outputI = -1;
+		int pipeI = -1l;
 		for(i=0;tokens[i]!=NULL;i++){
-			if(strcmp(tokens[i], "|")==0){
-				pipeI=i; //store index of pipe
+			if(strcmp(tokens[i], "<")==0){
+				inputI=i; //store index of reidrection input
+			}else if (strcmp(tokens[i], ">")==0){
+				outputI=i; // store index of redirection output
+			}else if(strcmp(tokens[i], "|") ==0){
+				pipeI = i; // store index of pipe
 			}
 		
 		}
 		// impmenting pipes
-		if (pipeI >= 0) { // split tokens into left and right commands
+		if (pipeI >= 0) { 
 			char *leftCmd[MAX_NUM_TOKENS];  // Left-side command
 			char *rightCmd[MAX_NUM_TOKENS]; // Right-side command
 		
@@ -117,51 +121,13 @@ int main(int argc, char* argv[]) {
 			}
 			rightCmd[j] = NULL; // mark end of commad
 
-			int pipe_fds[2];//array to hold pipe file descritors
-			// pipe_fds[0] == read, [1] for write
-			//create pipe
-			if(pipe(pipe_fds) ==-1){
-				perror("pipe");
-				exit(1);
-			}
 
-			//left command
-			pid_t pid_L = fork();
-			
-			if(pid_L<0){
-				perror("Left fork failed");
-			}else if (pid_L ==0){
-				close(pipe_fds[0]);//close read in of pipe
-				dup2(pipe_fds[1],STDOUT_FILENO);//redirect standard out to pipe write end
-				close(pipe_fds[1]);//closse write end after redirecting
+		}
+		
+		
 
-				execvp(leftCmd[0], leftCmd);
-    			perror("execvp"); // If execvp fails
-    			exit(1);
-			}
-			// right command
-			pid_t pid_R = fork();
-			
-			if(pid_R<0){
-				perror("Left fork failed");
-			}else if (pid_R ==0){
-				close(pipe_fds[1]);//close write end in of pipe
-				dup2(pipe_fds[0],STDIN_FILENO);//redirect standard input to pipe read end
-				close(pipe_fds[0]);//closse wred end after redirecting
-
-				execvp(rightCmd[0], rightCmd);
-    			perror("execvp"); // If execvp fails
-    			exit(1);
-			}
-			close(pipe_fds[0]); // Close both ends in parent
-            close(pipe_fds[1]);
-
-            waitpid(pid_L, NULL, 0); // Wait for first child to finish
-            waitpid(pid_R, NULL, 0); // Wait for second child to finish
-
-
-
-		}else{// handling non pipe commands
+		
+		
 
 		// creating new process
 		pid_t pid =fork();
@@ -170,82 +136,52 @@ int main(int argc, char* argv[]) {
 			printf("Fork failed");
 			perror("Fork failed");
 		}else if (pid==0){
-
-			int i = 0;
-			bool redirect = false;
-			char *outputFile = NULL;
-		
-			// Look for ">" in tokens
-			for(i=0;tokens[i]!=NULL;i++){
-				if (strcmp(tokens[i], ">") == 0) {
-					redirect = true;
-					outputFile = tokens[i + 1];
-					tokens[i] = NULL;  // Remove ">" 
-					break;
-				}
-			}		
-			// If redirection is true and ouput file !=NULL
-			if (redirect && outputFile) {
-				int fd_out = open(outputFile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-				if (fd_out < 0) {
-					perror("open");
+			
+			if(inputFile!=NULL){ // if input dected
+				int fd_in = open(inputFile, O_RDONLY);//open file, store file descriptor
+				if(fd_in<0){//error dectection
+					perror("Error opening input file");
 					exit(1);
 				}
+				dup2(fd_in,STDIN_FILENO); //redirect standard input to file
+				close(fd_in);//close file
+
+			}
+			if(outputFile!=NULL){ // if  output file detected // create if doesnt exist, if exist, truncate and overwrite
+				int fd_out = open(outputFile, O_WRONLY | O_CREAT | O_TRUNC, 0644);//| O_CREAT | O_TRUNC, 0666
+				if(fd_out<0){//error dectection
+					perror("Error opening output file");
+					exit(1);
+				}
+				printf( "Re directing output to File descriptor: %d\n", fd_out);
 				dup2(fd_out, STDOUT_FILENO);
-				dup2(fd_out, STDERR_FILENO);
-				close(fd_out);
+				// if(dup2(fd_out, STDOUT_FILENO)> 0){
+				// 	perror("Error redirecting file");
+				// 	exit(1);
+
+				// }
+				 //redirect standard output to file
+				//dup2(fd_out, STDERR_FILENO);
+				close(fd_out);//close file
+
 			}
-			if(execvp(tokens[0],tokens) == -1){//execute the commandA
-				char error_message[256];
-				snprintf(error_message, sizeof(error_message), "Command '%s' failed: ", tokens[0]);
-				perror(error_message);
-			}
-			exit(0);// Exit child process
-	
-		
-			
-			
-			
-			// if(inputFile!=NULL){ // if input dected
-			// 	int fd_in = open(inputFile, O_RDONLY);//open file, store file descriptor
-			// 	if(fd_in<0){//error dectection
-			// 		perror("Error opening input file");
-			// 		exit(1);
-			// 	}
-			// 	dup2(fd_in,STDIN_FILENO); //redirect standard input to file
-			// 	close(fd_in);//close file
-
-			// }
-			// if(outputFile!=NULL){ // if  output file detected // create if doesnt exist, if exist, truncate and overwrite
-			// 	int fd_out = open(outputFile, O_WRONLY | O_CREAT | O_TRUNC, 0644);//| O_CREAT | O_TRUNC, 0666
-			// 	if(fd_out<0){//error dectection
-			// 		perror("Error opening output file");
-			// 		exit(1);
-			// 	}
-			// 	printf( "Re directing output to File descriptor: %d\n", fd_out);
-			// 	dup2(fd_out, STDOUT_FILENO);
-			// 	// if(dup2(fd_out, STDOUT_FILENO)> 0){
-			// 	// 	perror("Error redirecting file");
-			// 	// 	exit(1);
-
-			// 	// }
-			// 	 //redirect standard output to file
-			// 	//dup2(fd_out, STDERR_FILENO);
-			// 	close(fd_out);//close file
-
-			// }
 			//debug print statement:echo ""
 			// Debug: Print the command and arguments
-			// printf("Executing command: %s\n", cmd[0]);
-			// for (int i = 1; cmd[i] != NULL; i++) {
-    		// 	printf("  Argument[%d]: %s\n", i, cmd[i]);
-			// }
-			// // printf("Executing: %s\n", cmd[0]);
-			// 
+			printf("Executing command: %s\n", cmd[0]);
+			for (int i = 1; cmd[i] != NULL; i++) {
+    			printf("  Argument[%d]: %s\n", i, cmd[i]);
+			}
+			// printf("Executing: %s\n", cmd[0]);
+			if(execvp(cmd[0],cmd) == -1){//execute the commandA
+				char error_message[256];
+    			snprintf(error_message, sizeof(error_message), "Command '%s' failed: ", cmd[0]);
+    			perror(error_message);
+			}
+			exit(0);// Exit child process
+
 		}else {
 			waitpid(pid, NULL, 0); // Parent waits for child
 		}
-	}
        
 		// Freeing the allocated memory	
 		for(i=0;tokens[i]!=NULL;i++){
