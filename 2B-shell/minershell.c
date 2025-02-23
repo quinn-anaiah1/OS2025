@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
 
 		//get actual command copy tokens without the > or <
 		for (int i = 0; tokens[i] != NULL; i++) {
-			if (i == inputIndex || i == outputIndex) {
+			if (i == inputI || i == outputI) {
 				break;  // Stop at '<' or '>'
 			}
 			cmd[cmdSize++] = tokens[i]; //copy will iteration size of cmd
