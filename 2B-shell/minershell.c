@@ -117,6 +117,19 @@ int main(int argc, char* argv[]) {
 			}
 			rightCmd[j] = NULL; // mark end of commad
 
+			//debugging 
+			printf("Left command: ");
+			for (i = 0; leftCmd[i] != NULL; i++) {
+    			printf("%s ", leftCmd[i]);
+			}
+			printf("\n");
+
+			printf("Right command: ");
+			for (i = 0; rightCmd[i] != NULL; i++) {
+   	 			printf("%s ", rightCmd[i]);
+			}
+			printf("\n");
+
 			int pipe_fds[2];//array to hold pipe file descritors
 			// pipe_fds[0] == read, [1] for write
 			//create pipe
