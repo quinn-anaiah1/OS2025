@@ -92,13 +92,36 @@ int main(int argc, char* argv[]) {
 		//loop through and detect redirection commands
 		int inputI = -1;
 		int outputI = -1;
+		int pipeI = -1l;
 		for(i=0;tokens[i]!=NULL;i++){
 			if(strcmp(tokens[i], "<")==0){
 				inputI=i; //store index of reidrection input
 			}else if (strcmp(tokens[i], ">")==0){
 				outputI=i; // store index of redirection output
+			}else if(strcmp(tokens[i], "|") ==0){
+				pipeI = i; // store index of pipe
 			}
 		
+		}
+		// impmenting pipes
+		if (pipeI >= 0) { 
+			char *leftCmd[MAX_NUM_TOKENS];  // Left-side command
+			char *rightCmd[MAX_NUM_TOKENS]; // Right-side command
+		
+			// Copy tokens before '|' into leftCmd[]
+			for (i = 0; i < pipeI; i++) {
+				leftCmd[i] = tokens[i];
+			}
+			leftCmd[pipeI] = NULL; // mark end of command
+		
+			// Copy tokens after '|' into rightCmd[]
+			int j = 0;
+			for (i = pipeI + 1; tokens[i] != NULL; i++) {
+				rightCmd[j++] = tokens[i];
+			}
+			rightCmd[j] = NULL; // mark end of commad
+
+
 		}
 		
 		char *cmd[MAX_NUM_TOKENS];  // Store the actual command
@@ -146,7 +169,7 @@ int main(int argc, char* argv[]) {
 
 			}
 			if(outputFile!=NULL){ // if  output file detected // create if doesnt exist, if exist, truncate and overwrite
-				int fd_out = open(outputFile, O_WRONLY );//| O_CREAT | O_TRUNC, 0666
+				int fd_out = open(outputFile, O_WRONLY | O_CREAT | O_TRUNC, 0666);//| O_CREAT | O_TRUNC, 0666
 				if(fd_out<0){//error dectection
 					perror("Error opening output file");
 					exit(1);
