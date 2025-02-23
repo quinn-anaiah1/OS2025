@@ -169,12 +169,12 @@ int main(int argc, char* argv[]) {
 
 			}
 			if(outputFile!=NULL){ // if  output file detected // create if doesnt exist, if exist, truncate and overwrite
-				int fd_out = open(outputFile, O_WRONLY | O_CREAT | O_TRUNC, 0666);//| O_CREAT | O_TRUNC, 0666
+				int fd_out = open(outputFile, O_WRONLY | O_CREAT | O_TRUNC, 0644);//| O_CREAT | O_TRUNC, 0666
 				if(fd_out<0){//error dectection
 					perror("Error opening output file");
 					exit(1);
 				}
-				printf( "File descriptor: %d\n", fd_out);
+				printf( "Re directing output to File descriptor: %d\n", fd_out);
 				dup2(fd_out, STDOUT_FILENO);
 				// if(dup2(fd_out, STDOUT_FILENO)> 0){
 				// 	perror("Error redirecting file");
@@ -188,10 +188,10 @@ int main(int argc, char* argv[]) {
 			}
 			//debug print statement:
 			// Debug: Print the command and arguments
-			// printf("Executing command: %s\n", cmd[0]);
-			// for (int i = 1; cmd[i] != NULL; i++) {
-    		// 	printf("  Argument[%d]: %s\n", i, cmd[i]);
-			// }
+			printf("Executing command: %s\n", cmd[0]);
+			for (int i = 1; cmd[i] != NULL; i++) {
+    			printf("  Argument[%d]: %s\n", i, cmd[i]);
+			}
 			printf("Executing: %s\n", cmd[0]);
 			if(execvp(cmd[0],cmd) == -1){//execute the commandA
 				char error_message[256];
