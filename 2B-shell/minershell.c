@@ -155,7 +155,14 @@ int main(int argc, char* argv[]) {
 				close(fd_out);//close file
 
 			}
-			if(execvp(cmd[0],cmd) == -1){//execute the command
+			//debug print statement:
+			// Debug: Print the command and arguments
+			printf("Executing command: %s\n", cmd[0]);
+			for (int i = 1; cmd[i] != NULL; i++) {
+    			printf("  Argument[%d]: %s\n", i, cmd[i]);
+			}
+
+			if(execvp(cmd[0],cmd) == -1){//execute the commandA
 				perror("Command failed");
 			}
 			exit(0);// Exit child process
