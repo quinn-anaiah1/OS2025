@@ -146,12 +146,12 @@ int main(int argc, char* argv[]) {
 
 			}
 			if(outputFile!=NULL){ // if  output file detected // create if doesnt exist, if exist, truncate and overwrite
-				int fd_out = open(outputFile, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+				int fd_out = open(outputFile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 				if(fd_out<0){//error dectection
 					perror("Error opening output file");
 					exit(1);
 				}
-				dup2(fd_out,STDOUT_FILENO); //redirect standard output to file
+				dup2(fd_out,1); //redirect standard output to file
 				close(fd_out);//close file
 
 			}
