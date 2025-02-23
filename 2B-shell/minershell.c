@@ -146,10 +146,17 @@ int main(int argc, char* argv[]) {
 		
 		if (outputI != -1 && tokens[outputI + 1] != NULL) { //if output redirected and the file name isnt null
 			outputFile = tokens[outputI + 1]; //store file name
-			tokens[outputI+1] == NULL;
 			
 		}
-		
+		//get actual command copy tokens without the > or <
+		for (int i = 0; tokens[i] != NULL; i++) {
+			if (i == inputI || i == outputI || i = inputI+1 || i= outputI+1) {
+				  // Stop at '<' or '>'
+				  i++; //skip
+			}
+			cmd[cmdSize++] = tokens[i]; //copy will iteration size of cmd
+		}
+		cmd[cmdSize] = NULL; // mark end of the command
 		//
 
 		// creating new process
@@ -190,14 +197,14 @@ int main(int argc, char* argv[]) {
 			}
 			//debug print statement:
 			// Debug: Print the command and arguments
-			printf("Executing command: %s\n", tokens[0]);
-			for (int i = 1; tokens[i] != NULL; i++) {
-    			printf("  Argument[%d]: %s\n", i, tokens[i]);
+			printf("Executing command: %s\n", cmd[0]);
+			for (int i = 1; cmd[i] != NULL; i++) {
+    			printf("  Argument[%d]: %s\n", i, cmd[i]);
 			}
 			// printf("Executing: %s\n", cmd[0]);
-			if(execvp(tokens[0],tokens) == -1){//execute the commandA
+			if(execvp(cmd[0],cmd) == -1){//execute the commandA
 				char error_message[256];
-    			snprintf(error_message, sizeof(error_message), "Command '%s' failed: ", tokens[0]);
+    			snprintf(error_message, sizeof(error_message), "Command '%s' failed: ", cmd[0]);
     			perror(error_message);
 			}
 			exit(0);// Exit child process
