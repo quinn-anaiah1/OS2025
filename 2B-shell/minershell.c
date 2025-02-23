@@ -190,7 +190,7 @@ int main(int argc, char* argv[]) {
 			// for (int i = 1; cmd[i] != NULL; i++) {
     		// 	printf("  Argument[%d]: %s\n", i, cmd[i]);
 			// }
-			fprintf(stderr, "Executing: %s\n", cmd[0]);
+			printf("Executing: %s\n", cmd[0]);
 			if(execvp(cmd[0],cmd) == -1){//execute the commandA
 				perror("Command failed");
 			}
