@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <fcntl.h>
+#include <stdbool.h>
 
 #define MAX_INPUT_SIZE 1024 //Maximum size of the input
 #define MAX_TOKEN_SIZE 64 // Maximum size of a single token
