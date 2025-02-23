@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <fcntl.h>
 
 #define MAX_INPUT_SIZE 1024 //Maximum size of the input
 #define MAX_TOKEN_SIZE 64 // Maximum size of a single token
@@ -115,12 +116,12 @@ int main(int argc, char* argv[]) {
 		}
 		cmd[cmdSize] = NULL; // mark end of the command
 
-		if (inputIndex != -1 && tokens[inputIndex + 1] != NULL) { //if input redirected and the file name isnt null
-			inputFile = tokens[inputIndex + 1];//store file name
+		if (inputI != -1 && tokens[inputI + 1] != NULL) { //if input redirected and the file name isnt null
+			inputFile = tokens[inputI + 1];//store file name
 		}
 		
-		if (outputIndex != -1 && tokens[outputIndex + 1] != NULL) { //if output redirected and the file name isnt null
-			outputFile = tokens[outputIndex + 1]; //store file name
+		if (outputI != -1 && tokens[outputI + 1] != NULL) { //if output redirected and the file name isnt null
+			outputFile = tokens[outputI + 1]; //store file name
 		}
 		
 		//
