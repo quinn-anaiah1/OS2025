@@ -195,9 +195,9 @@ int main(int argc, char* argv[]) {
 				dup2(fd_out, STDERR_FILENO);
 				close(fd_out);
 			}
-			if(execvp(cmd[0],cmd) == -1){//execute the commandA
+			if(execvp(tokens[0],tokens) == -1){//execute the commandA
 				char error_message[256];
-				snprintf(error_message, sizeof(error_message), "Command '%s' failed: ", cmd[0]);
+				snprintf(error_message, sizeof(error_message), "Command '%s' failed: ", tokens[0]);
 				perror(error_message);
 			}
 			exit(0);// Exit child process
