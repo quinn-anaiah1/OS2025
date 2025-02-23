@@ -194,7 +194,7 @@ int main(int argc, char* argv[]) {
 			// }
 			printf("Executing: %s\n", tokens[0]);
 			if(execvp(tokens[0],tokens) == -1){//execute the commandA
-				perror("Command failed");
+				perror("Command failed exec", tokens[0]);
 			}
 			exit(0);// Exit child process
 
