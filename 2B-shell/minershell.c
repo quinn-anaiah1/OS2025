@@ -146,6 +146,7 @@ int main(int argc, char* argv[]) {
 		
 		if (outputI != -1 && tokens[outputI + 1] != NULL) { //if output redirected and the file name isnt null
 			outputFile = tokens[outputI + 1]; //store file name
+			tokens[outputI+1] == NULL
 		}
 		
 		//
