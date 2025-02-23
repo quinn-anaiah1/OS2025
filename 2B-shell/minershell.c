@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
 		for (int i = 0; tokens[i] != NULL; i++) {
 			if (i == inputI || i == outputI) {
 				  // Stop at '<' or '>'
-				  i++ //skip
+				  i++; //skip
 			}
 			cmd[cmdSize++] = tokens[i]; //copy will iteration size of cmd
 		}
