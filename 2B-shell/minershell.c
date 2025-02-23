@@ -1,3 +1,11 @@
+/*
+ * File: minershell.c
+ * Author: Anaiah Quinn
+ * Date: 20254-2-22 
+ * Description: Minershell implementation for assignment 2B-shell
+ * now inlcudes output redirection and basic pipe functionality
+ */
+
 #include  <stdio.h>
 #include  <sys/types.h>
 #include <stdlib.h>
