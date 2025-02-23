@@ -155,7 +155,7 @@ int main(int argc, char* argv[]) {
 				close(fd_out);//close file
 
 			}
-			if(execvp(tokens[0],tokens) == -1){//execute the command
+			if(execvp(cmd[0],cmd) == -1){//execute the command
 				perror("Command failed");
 			}
 			exit(0);// Exit child process
