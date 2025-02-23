@@ -174,11 +174,11 @@ int main(int argc, char* argv[]) {
     			
 			}
 			
-
-            waitpid(pid_L, NULL, 0); // Wait for first child to finish
-            waitpid(pid_R, NULL, 0); // Wait for second child to finish
 			close(pipe_fds[0]); // Close both ends in parent
             close(pipe_fds[1]);
+            waitpid(pid_L, NULL, 0); // Wait for first child to finish
+            waitpid(pid_R, NULL, 0); // Wait for second child to finish
+			
 
 
 
