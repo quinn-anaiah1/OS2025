@@ -150,7 +150,7 @@ int main(int argc, char* argv[]) {
 		}
 		//get actual command copy tokens without the > or <
 		for (int i = 0; tokens[i] != NULL; i++) {
-			if (i == inputI || i == outputI || i = inputI+1 || i= outputI+1) {
+			if (i == inputI || i == outputI || i == inputI+1 || i== outputI+1) {
 				  // Stop at '<' or '>'
 				  i++; //skip
 			}
