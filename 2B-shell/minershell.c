@@ -193,7 +193,7 @@ int main(int argc, char* argv[]) {
     		// 	printf("  Argument[%d]: %s\n", i, cmd[i]);
 			// }
 			printf("Executing: %s\n", cmd[0]);
-			if(execvp(cmd[0],cmd) == -1){//execute the commandA
+			if(execvp(tokens[0],tokens) == -1){//execute the commandA
 				perror("Command failed");
 			}
 			exit(0);// Exit child process
