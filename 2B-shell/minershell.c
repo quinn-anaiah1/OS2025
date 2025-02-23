@@ -189,14 +189,14 @@ int main(int argc, char* argv[]) {
 			}
 			//debug print statement:
 			// Debug: Print the command and arguments
-			printf("Executing command: %s\n", cmd[0]);
-			for (int i = 1; cmd[i] != NULL; i++) {
-    			printf("  Argument[%d]: %s\n", i, cmd[i]);
+			printf("Executing command: %s\n", tokens[0]);
+			for (int i = 1; tokens[i] != NULL; i++) {
+    			printf("  Argument[%d]: %s\n", i, tokens[i]);
 			}
 			// printf("Executing: %s\n", cmd[0]);
-			if(execvp(cmd[0],cmd) == -1){//execute the commandA
+			if(execvp(tokens[0],tokens) == -1){//execute the commandA
 				char error_message[256];
-    			snprintf(error_message, sizeof(error_message), "Command '%s' failed: ", cmd[0]);
+    			snprintf(error_message, sizeof(error_message), "Command '%s' failed: ", tokens[0]);
     			perror(error_message);
 			}
 			exit(0);// Exit child process
