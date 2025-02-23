@@ -148,6 +148,7 @@ int main(int argc, char* argv[]) {
 				dup2(pipe_fds[1],STDOUT_FILENO);//redirect standard out to pipe write end
 				close(pipe_fds[1]);//closse write end after redirecting
 
+				printf("Executing left command: %s\n", leftCmd[0]);
 				if (execvp(leftCmd[0], leftCmd)==-1){
 					perror("execvp"); // If execvp fails
     				exit(1);
@@ -164,6 +165,7 @@ int main(int argc, char* argv[]) {
 				dup2(pipe_fds[0],STDIN_FILENO);//redirect standard input to pipe read end
 				close(pipe_fds[0]);//closse wred end after redirecting
 
+				printf("Executing right command: %s\n", rightCmd[0]);
 				if(execvp(rightCmd[0], rightCmd)== -1){
 					perror("execvp failed for write command"); // If execvp fails
     				exit(1);
