@@ -175,11 +175,12 @@ int main(int argc, char* argv[]) {
 					exit(1);
 				}
 				printf( "File descriptor: %d\n", fd_out);
-				if(dup2(fd_out, STDOUT_FILENO)> 0){
-					perror("Error redirecting file");
-					exit(1);
+				dup2(fd_out STDOUT_FILENO);
+				// if(dup2(fd_out, STDOUT_FILENO)> 0){
+				// 	perror("Error redirecting file");
+				// 	exit(1);
 
-				}
+				// }
 				 //redirect standard output to file
 				//dup2(fd_out, STDERR_FILENO);
 				close(fd_out);//close file
