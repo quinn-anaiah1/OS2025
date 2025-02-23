@@ -164,8 +164,7 @@ int main(int argc, char* argv[]) {
 				close(pipe_fds[1]);//close write end in of pipe
 				dup2(pipe_fds[0],STDIN_FILENO);//redirect standard input to pipe read end
 				close(pipe_fds[0]);//closse wred end after redirecting
-
-				printf("Executing right command: %s\n", rightCmd[0]);
+				
 				if(execvp(rightCmd[0], rightCmd)== -1){
 					perror("execvp failed for write command"); // If execvp fails
     				exit(1);
@@ -173,12 +172,11 @@ int main(int argc, char* argv[]) {
 
     			
 			}
-			
 			close(pipe_fds[0]); // Close both ends in parent
             close(pipe_fds[1]);
+
             waitpid(pid_L, NULL, 0); // Wait for first child to finish
             waitpid(pid_R, NULL, 0); // Wait for second child to finish
-			
 
 
 
