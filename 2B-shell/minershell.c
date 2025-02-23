@@ -151,7 +151,7 @@ int main(int argc, char* argv[]) {
 				printf("Executing left command: %s\n", leftCmd[0]);
 				if (execvp(leftCmd[0], leftCmd)==-1){
 					perror("execvp"); // If execvp fails
-    				exit(1);
+    				_exit(1);
 				}
     			
 			}
@@ -165,9 +165,20 @@ int main(int argc, char* argv[]) {
 				dup2(pipe_fds[0],STDIN_FILENO);//redirect standard input to pipe read end
 				close(pipe_fds[0]);//closse wred end after redirecting
 				
+				// try cleaning string
+				// Remove quotes from rightCmd arguments before executing
+			for (int k = 0; rightCmd[k] != NULL; k++) {
+    			int len = strlen(rightCmd[k]);
+    			if ((rightCmd[k][0] == '"' && rightCmd[k][len - 1] == '"') || 
+        			(rightCmd[k][0] == '\'' && rightCmd[k][len - 1] == '\'')) {
+        			memmove(rightCmd[k], rightCmd[k] + 1, len - 2);  // Shift left to remove first char
+        			rightCmd[k][len - 2] = '\0';  // Remove last char
+    			}
+			}
+
 				if(execvp(rightCmd[0], rightCmd)== -1){
 					perror("execvp failed for write command"); // If execvp fails
-    				exit(1);
+    				_exit(1);
 				};
 
     			
