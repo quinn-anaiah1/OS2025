@@ -99,6 +99,32 @@ int main(int argc, char* argv[]) {
 			}
 		
 		}
+		
+		char *cmd[MAX_NUM_TOKENS];  // Store the actual command
+		char *inputFile = NULL;      // Store input redirection file name
+		char *outputFile = NULL;     // Store output redirection file name
+
+		int cmdSize = 0;
+
+		//get actual command copy tokens without the > or <
+		for (int i = 0; tokens[i] != NULL; i++) {
+			if (i == inputIndex || i == outputIndex) {
+				break;  // Stop at '<' or '>'
+			}
+			cmd[cmdSize++] = tokens[i]; //copy will iteration size of cmd
+		}
+		cmd[cmdSize] = NULL; // mark end of the command
+
+		if (inputIndex != -1 && tokens[inputIndex + 1] != NULL) { //if input redirected and the file name isnt null
+			inputFile = tokens[inputIndex + 1];//store file name
+		}
+		
+		if (outputIndex != -1 && tokens[outputIndex + 1] != NULL) { //if output redirected and the file name isnt null
+			outputFile = tokens[outputIndex + 1]; //store file name
+		}
+		
+		//
+
 		// creating new process
 		pid_t pid =fork();
 
@@ -106,7 +132,27 @@ int main(int argc, char* argv[]) {
 			printf("Fork failed");
 			perror("Fork failed");
 		}else if (pid==0){
-			//printf("Child Process created successfully!\n");
+			
+			if(inputFile!=NULL){ // if input dected
+				int fd_in = open(inputFile, O_RDONLY);//open file, store file descriptor
+				if(fd_in<0){//error dectection
+					perror("Error opening input file");
+					exit(1);
+				}
+				dup2(fd_in,STDIN_FILENO); //redirect standard input to file
+				close(fd_in);//close file
+
+			}
+			if(outputFile!=NULL){ // if  output file detected // create if doesnt exist, if exist, truncate and overwrite
+				int fd_out = open(outputFile, O_WRONLY |O_CREAT | O_TRUNC | 0644); // open file in write only, store file descriptor
+				if(fd_out<0){//error dectection
+					perror("Error opening output file");
+					exit(1);
+				}
+				dup2(fd_out,STDOUT_FILENO); //redirect standard output to file
+				close(fd_out);//close file
+
+			}
 			if(execvp(tokens[0],tokens) == -1){//execute the command
 				perror("Command failed");
 			}
