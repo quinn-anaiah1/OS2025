@@ -157,10 +157,10 @@ int main(int argc, char* argv[]) {
 			}
 			//debug print statement:
 			// Debug: Print the command and arguments
-			printf("Executing command: %s\n", cmd[0]);
-			for (int i = 1; cmd[i] != NULL; i++) {
-    			printf("  Argument[%d]: %s\n", i, cmd[i]);
-			}
+			// printf("Executing command: %s\n", cmd[0]);
+			// for (int i = 1; cmd[i] != NULL; i++) {
+    		// 	printf("  Argument[%d]: %s\n", i, cmd[i]);
+			// }
 
 			if(execvp(cmd[0],cmd) == -1){//execute the commandA
 				perror("Command failed");
