@@ -188,10 +188,10 @@ int main(int argc, char* argv[]) {
 			}
 			//debug print statement:
 			// Debug: Print the command and arguments
-			// printf("Executing command: %s\n", cmd[0]);
-			// for (int i = 1; cmd[i] != NULL; i++) {
-    		// 	printf("  Argument[%d]: %s\n", i, cmd[i]);
-			// }
+			printf("Executing command: %s\n", cmd[0]);
+			for (int i = 1; cmd[i] != NULL; i++) {
+    			printf("  Argument[%d]: %s\n", i, cmd[i]);
+			}
 			// printf("Executing: %s\n", cmd[0]);
 			if(execvp(cmd[0],cmd) == -1){//execute the commandA
 				char error_message[256];
