@@ -90,22 +90,17 @@ int main(int argc, char* argv[]) {
 		}
    
 		
-		//loop through and detect redirection commands
-		int inputI = -1;
-		int outputI = -1;
-		int pipeI = -1l;
+		//loop through and detect pipe command
+		
+		int pipeI = -1;
 		for(i=0;tokens[i]!=NULL;i++){
-			if(strcmp(tokens[i], "<")==0){
-				inputI=i; //store index of reidrection input
-			}else if (strcmp(tokens[i], ">")==0){
-				outputI=i; // store index of redirection output
-			}else if(strcmp(tokens[i], "|") ==0){
-				pipeI = i; // store index of pipe
+			if(strcmp(tokens[i], "|")==0){
+				pipeI=i; //store index of pipe
 			}
 		
 		}
 		// impmenting pipes
-		if (pipeI >= 0) { 
+		if (pipeI >= 0) { // split tokens into left and right commands
 			char *leftCmd[MAX_NUM_TOKENS];  // Left-side command
 			char *rightCmd[MAX_NUM_TOKENS]; // Right-side command
 		
@@ -122,43 +117,15 @@ int main(int argc, char* argv[]) {
 			}
 			rightCmd[j] = NULL; // mark end of commad
 
+			int pipe_fds[2];//array to hold pipe file descritors
+			// pipe_fds[0] == read, [1] for write
+			//create pipe
+			if(pipe(pipe_fds) ==-1){
+				perror("pipe");
+				exit(1);
+			}
 
-		}
-		
-		// char *cmd[MAX_NUM_TOKENS];  // Store the actual command
-		// char *inputFile = NULL;      // Store input redirection file name
-		// char *outputFile = NULL;     // Store output redirection file name
-
-		// int cmdSize = 0;
-
-		// //get actual command copy tokens without the > or <
-		// for (int i = 0; tokens[i] != NULL; i++) {
-		// 	if (i == inputI || i == outputI) {
-		// 		  // Stop at '<' or '>'
-		// 		  i++; //skip
-		// 	}
-		// 	cmd[cmdSize++] = tokens[i]; //copy will iteration size of cmd
-		// }
-		// cmd[cmdSize] = NULL; // mark end of the command
-
-		// if (inputI != -1 && tokens[inputI + 1] != NULL) { //if input redirected and the file name isnt null
-		// 	inputFile = tokens[inputI + 1];//store file name
-		// }
-		
-		// if (outputI != -1 && tokens[outputI + 1] != NULL) { //if output redirected and the file name isnt null
-		// 	outputFile = tokens[outputI + 1]; //store file name
-			
-		// }
-		// //get actual command copy tokens without the > or <
-		// for (int i = 0; tokens[i] != NULL; i++) {
-		// 	if (i == inputI || i == outputI || i == inputI+1 || i== outputI+1) {
-		// 		  // Stop at '<' or '>'
-		// 		  i++; //skip
-		// 	}
-		// 	cmd[cmdSize++] = tokens[i]; //copy will iteration size of cmd
-		// }
-		// cmd[cmdSize] = NULL; // mark end of the command
-		// //
+		}else{// handling non pipe commands
 
 		// creating new process
 		pid_t pid =fork();
@@ -177,13 +144,10 @@ int main(int argc, char* argv[]) {
 				if (strcmp(tokens[i], ">") == 0) {
 					redirect = true;
 					outputFile = tokens[i + 1];
-					tokens[i] = NULL;  // Remove ">" and everything after it
+					tokens[i] = NULL;  // Remove ">" 
 					break;
 				}
-			}
-
-			
-		
+			}		
 			// If redirection is true and ouput file !=NULL
 			if (redirect && outputFile) {
 				int fd_out = open(outputFile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -245,6 +209,7 @@ int main(int argc, char* argv[]) {
 		}else {
 			waitpid(pid, NULL, 0); // Parent waits for child
 		}
+	}
        
 		// Freeing the allocated memory	
 		for(i=0;tokens[i]!=NULL;i++){
