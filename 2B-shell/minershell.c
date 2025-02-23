@@ -152,7 +152,7 @@ int main(int argc, char* argv[]) {
 					exit(1);
 				}
 				dup2(fd_out,1); //redirect standard output to file
-				close(fd_out);//close file
+				//close(fd_out);//close file
 
 			}
 			//debug print statement:
