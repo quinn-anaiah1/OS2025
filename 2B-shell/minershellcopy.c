@@ -170,37 +170,41 @@ int main(int argc, char* argv[]) {
 
 			int i = 0;
 			bool redirect = false;
-			char *filename = NULL;
+			char *outputFile = NULL;
 		
 			// Look for ">" in tokens
-			while (tokens[i] != NULL) {
+			for(i=0;tokens[i]!=NULL;i++){
 				if (strcmp(tokens[i], ">") == 0) {
 					redirect = true;
-					filename = tokens[i + 1];
+					outputFile = tokens[i + 1];
 					tokens[i] = NULL;  // Remove ">" and everything after it
 					break;
 				}
-				i++;
 			}
+
+			
 		
-			// If redirection is needed
-			if (redirect && filename) {
-				int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-				if (fd < 0) {
+			// If redirection is true and ouput file !=NULL
+			if (redirect && outputFile) {
+				int fd_out = open(outputFile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				if (fd_out < 0) {
 					perror("open");
 					exit(1);
 				}
-				dup2(fd, STDOUT_FILENO);
-				dup2(fd, STDERR_FILENO);
-				close(fd);
+				dup2(fd_out, STDOUT_FILENO);
+				dup2(fd_out, STDERR_FILENO);
+				close(fd_out);
 			}
+			if(execvp(cmd[0],cmd) == -1){//execute the commandA
+				char error_message[256];
+				snprintf(error_message, sizeof(error_message), "Command '%s' failed: ", cmd[0]);
+				perror(error_message);
+			}
+			exit(0);// Exit child process
+	
 		
-			// Execute command
-			execvp(tokens[0], tokens);
-		
-			// If exec fails
-			perror("execvp");
-			exit(1);
+			
+			
 			
 			// if(inputFile!=NULL){ // if input dected
 			// 	int fd_in = open(inputFile, O_RDONLY);//open file, store file descriptor
@@ -237,13 +241,7 @@ int main(int argc, char* argv[]) {
     		// 	printf("  Argument[%d]: %s\n", i, cmd[i]);
 			// }
 			// // printf("Executing: %s\n", cmd[0]);
-			// if(execvp(cmd[0],cmd) == -1){//execute the commandA
-			// 	char error_message[256];
-    		// 	snprintf(error_message, sizeof(error_message), "Command '%s' failed: ", cmd[0]);
-    		// 	perror(error_message);
-			// }
-			// exit(0);// Exit child process
-
+			// 
 		}else {
 			waitpid(pid, NULL, 0); // Parent waits for child
 		}
