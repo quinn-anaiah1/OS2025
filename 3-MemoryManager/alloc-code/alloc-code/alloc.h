@@ -3,6 +3,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define PAGESIZE 4096 //size of memory to allocate from OS
 #define MINALLOC 8 //allocations will be 8 bytes or multiples of it
@@ -33,7 +34,7 @@ success and a non-zero error code otherwise. */
 
 int init_alloc() {
     // using mmap to allocate a memory page of pages size
-    void *mem_page = mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE,
+    void *mem_page = mmap(NULL, PAGESIZE, PROT_READ | PROT_WRITE,
                        MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 
     if (mem_page == MAP_FAILED) {
@@ -59,14 +60,14 @@ memory mapped page back to the OS. This function must return 0 on success
 and a non-zero error code otherwise. */
 int cleanup(){
     //use munmap to free page pointer 
-    if(mem_page == NULL){ //if page pointer is null, indicate error?
-        return 1
-    }
-    if(munmap(mem_page, PAGESIZE)){ // if munmap fails, return 1
-        return 1
-    }
-    mem_page = NULL // reset pointer after freeeing memory
-    return 0; // Success
+    // if(mem_page == NULL){ //if page pointer is null, indicate error?
+    //     return 1;
+    // }
+    // if(munmap(mem_page, PAGESIZE)){ // if munmap fails, return 1
+    //     return 1;
+    // }
+    // mem_page = NULL // reset pointer after freeeing memory
+    // return 0; // Success
 }
 
 
