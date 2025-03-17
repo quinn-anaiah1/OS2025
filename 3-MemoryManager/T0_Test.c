@@ -22,7 +22,7 @@ int main() {
     void *mapped_mem_pt = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 
     //error handdling
-    if(mapped_mem_p == MAP_FAILED){
+    if(mapped_mem_pt == MAP_FAILED){
         perror("mmap failed")
         exit(1)
     }
@@ -31,6 +31,6 @@ int main() {
 
     
     //free memory before exit
-    munmap(mapped_memory, 4096)
+    munmap(mapped_mem_pt, 4096)
     return 0;
 }
