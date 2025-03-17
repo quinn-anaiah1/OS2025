@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/mman.h>
+#include <string.h>
 
 int main() {
     printf("Process ID: %d\n", getpid());
