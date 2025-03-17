@@ -14,13 +14,37 @@ allocating a 4KB page from the OS via mmap, and initializing any other data
 structures required. This function will be invoked by the user before requesting
 any memory from your memory manager. This function must return 0 on
 success and a non-zero error code otherwise. */
-int init_alloc(); \
+
+//declare pointer for memory page
+static void *mem_page = NULL;
+
+int init_alloc() {
+    // using mmap to allocate a memory page of pages size
+    mem_page = mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE,
+                       MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+
+    if (mem_page == MAP_FAILED) {
+        return 1;  // Return 1 on failure (as expected by test code)
+    }
+
+    return 0;  // Success
+}
 
 
 /*The function cleanup() must cleanup state of your manager, and return the
 memory mapped page back to the OS. This function must return 0 on success
 and a non-zero error code otherwise. */
-int cleanup(); 
+int cleanup(){
+    //use munmap to free page pointer 
+    if(mem_page == NULL){ //if page pointer is null, indicate error?
+        return 1
+    }
+    if(munmap(mem_page, PAGESIZE)){ // if munmap fails, return 1
+        return 1
+    }
+    mem_page = NULL // reset pointer after freeeing memory
+    return 0; // Success
+}
 
 
 /*The function alloc(int) takes an integer bu_er size that must be allocated
