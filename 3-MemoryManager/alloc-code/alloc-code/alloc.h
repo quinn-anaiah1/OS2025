@@ -66,7 +66,7 @@ int cleanup(){
     if(munmap(mem_page, PAGESIZE)){ // if munmap fails, return 1
         return 1;
     }
-    mem_page = NULL // reset pointer after freeeing memory
+    mem_page = NULL; // reset pointer after freeeing memory
 
     //optional cleaning the linked list
     return 0; // Success
