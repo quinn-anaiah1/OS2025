@@ -23,14 +23,14 @@ int main() {
 
     //error handdling
     if(mapped_mem_pt == MAP_FAILED){
-        perror("mmap failed")
-        exit(1)
+        perror("mmap failed");
+        exit(1);
     }
     printf("Memory mapped successfull. Now Sleeping.. Press Enter to exit");
     getchar();  // Wait for user input
 
     
     //free memory before exit
-    munmap(mapped_mem_pt, 4096)
+    munmap(mapped_mem_pt, 4096);
     return 0;
 }
