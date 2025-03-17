@@ -117,6 +117,19 @@ int main(int argc, char* argv[]) {
 			}
 			rightCmd[j] = NULL; // mark end of commad
 
+			//debugging 
+			printf("Left command: ");
+			for (i = 0; leftCmd[i] != NULL; i++) {
+    			printf("%s ", leftCmd[i]);
+			}
+			printf("\n");
+
+			printf("Right command: ");
+			for (i = 0; rightCmd[i] != NULL; i++) {
+   	 			printf("%s ", rightCmd[i]);
+			}
+			printf("\n");
+
 			int pipe_fds[2];//array to hold pipe file descritors
 			// pipe_fds[0] == read, [1] for write
 			//create pipe
@@ -124,6 +137,48 @@ int main(int argc, char* argv[]) {
 				perror("pipe");
 				exit(1);
 			}
+
+			//left command
+			pid_t pid_L = fork();
+			
+			if(pid_L<0){
+				perror("Left fork failed");
+			}else if (pid_L ==0){
+				close(pipe_fds[0]);//close read in of pipe
+				dup2(pipe_fds[1],STDOUT_FILENO);//redirect standard out to pipe write end
+				close(pipe_fds[1]);//closse write end after redirecting
+
+				printf("Executing left command: %s\n", leftCmd[0]);
+				if (execvp(leftCmd[0], leftCmd)==-1){
+					perror("execvp"); // If execvp fails
+    				exit(1);
+				}
+    			
+			}
+			// right command
+			pid_t pid_R = fork();
+			
+			if(pid_R<0){
+				perror("Right fork failed");
+			}else if (pid_R ==0){
+				close(pipe_fds[1]);//close write end in of pipe
+				dup2(pipe_fds[0],STDIN_FILENO);//redirect standard input to pipe read end
+				close(pipe_fds[0]);//closse wred end after redirecting
+				
+				if(execvp(rightCmd[0], rightCmd)== -1){
+					perror("execvp failed for write command"); // If execvp fails
+    				exit(1);
+				};
+
+    			
+			}
+			close(pipe_fds[0]); // Close both ends in parent
+            close(pipe_fds[1]);
+
+            waitpid(pid_L, NULL, 0); // Wait for first child to finish
+            waitpid(pid_R, NULL, 0); // Wait for second child to finish
+
+
 
 		}else{// handling non pipe commands
 
