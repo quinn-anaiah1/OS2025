@@ -7,6 +7,20 @@
 #define PAGESIZE 4096 //size of memory to allocate from OS
 #define MINALLOC 8 //allocations will be 8 bytes or multiples of it
 
+//structure to store memory
+typedef struct MemoryBlock
+{
+    void *start; // starting address of the block
+    size_t size; // size of the memory block
+    struct MemoryBlock *next;
+    bool is_free;
+    
+} MemoryBlock;
+//
+MemoryBlock *free_list =NULL;
+MemoryBlock *allocated_list = NULL;
+//declare pointer for memory page
+//static void *mem_page = NULL;
 // function declarations
 
 /*The function init alloc() must initialize the memory manager, including
@@ -15,17 +29,26 @@ structures required. This function will be invoked by the user before requesting
 any memory from your memory manager. This function must return 0 on
 success and a non-zero error code otherwise. */
 
-//declare pointer for memory page
-static void *mem_page = NULL;
+
 
 int init_alloc() {
     // using mmap to allocate a memory page of pages size
-    mem_page = mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE,
+    void *mem_page = mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE,
                        MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 
     if (mem_page == MAP_FAILED) {
         return 1;  // Return 1 on failure (as expected by test code)
     }
+    //now to  initilize the free list with the total page size
+
+    free_list = (MemoryBlock*)mem_page;
+    free_list->size = PAGESIZE;
+    free_list->is_free = true;
+    free_list->next =  NULL;
+    free_list->start = mem_page;
+
+    //Initialize the allocated_list to null
+    allocated_list = NULL;
 
     return 0;  // Success
 }
