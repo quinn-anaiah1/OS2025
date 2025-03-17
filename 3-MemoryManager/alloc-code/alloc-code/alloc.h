@@ -21,7 +21,7 @@ typedef struct MemoryBlock
 MemoryBlock *free_list =NULL;
 MemoryBlock *allocated_list = NULL;
 //declare pointer for memory page
-//static void *mem_page = NULL;
+static void *mem_page = NULL;
 // function declarations
 
 /*The function init alloc() must initialize the memory manager, including
@@ -34,13 +34,13 @@ success and a non-zero error code otherwise. */
 
 int init_alloc() {
     // using mmap to allocate a memory page of pages size
-    void *mem_page = mmap(NULL, PAGESIZE, PROT_READ | PROT_WRITE,
+    mem_page = mmap(NULL, PAGESIZE, PROT_READ | PROT_WRITE,
                        MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 
     if (mem_page == MAP_FAILED) {
         return 1;  // Return 1 on failure (as expected by test code)
     }
-    //now to  initilize the free list with the total page size
+    //now to  initialize the free list with the total page size
 
     free_list = (MemoryBlock*)mem_page;
     free_list->size = PAGESIZE;
@@ -60,14 +60,16 @@ memory mapped page back to the OS. This function must return 0 on success
 and a non-zero error code otherwise. */
 int cleanup(){
     //use munmap to free page pointer 
-    // if(mem_page == NULL){ //if page pointer is null, indicate error?
-    //     return 1;
-    // }
-    // if(munmap(mem_page, PAGESIZE)){ // if munmap fails, return 1
-    //     return 1;
-    // }
-    // mem_page = NULL // reset pointer after freeeing memory
-    // return 0; // Success
+    if(mem_page == NULL){ //if page pointer is null, indicate error?
+        return 1;
+    }
+    if(munmap(mem_page, PAGESIZE)){ // if munmap fails, return 1
+        return 1;
+    }
+    mem_page = NULL // reset pointer after freeeing memory
+
+    //optional cleaning the linked list
+    return 0; // Success
 }
 
 
