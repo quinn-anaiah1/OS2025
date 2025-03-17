@@ -27,6 +27,8 @@ int main() {
         exit(1);
     }
     printf("Memory mapped successfull. Now Sleeping.. Press Enter to exit");
+    
+    strcpy((char*)mapped_mem_pt, "Hello from mmap!");//use tring copu tp force phyiscal allocation
     getchar();  // Wait for user input
 
     
