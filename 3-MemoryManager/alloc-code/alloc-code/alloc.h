@@ -5,10 +5,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define PAGESIZE 4096 //size of memory to allocate from OS
-#define MINALLOC 8 //allocations will be 8 bytes or multiples of it
+#define PAGESIZE 4096 /*size of memory to allocate from OS*/
+#define MINALLOC 8 /*allocations will be 8 bytes or multiples of it*/
 
-//structure to store memory
+/*structure to store memory*/
 typedef struct MemoryBlock
 {
     void *start; // starting address of the block
@@ -20,9 +20,9 @@ typedef struct MemoryBlock
 //
 MemoryBlock *free_list =NULL;
 MemoryBlock *allocated_list = NULL;
-//declare pointer for memory page
+/*declare pointer for memory page*/
 static void *mem_page = NULL;
-// function declarations
+/*function declarations*/ 
 
 /*The function init alloc() must initialize the memory manager, including
 allocating a 4KB page from the OS via mmap, and initializing any other data
@@ -33,14 +33,14 @@ success and a non-zero error code otherwise. */
 
 
 int init_alloc() {
-    // using mmap to allocate a memory page of pages size
+    /*using mmap to allocate a memory page of pages size*/
     mem_page = mmap(NULL, PAGESIZE, PROT_READ | PROT_WRITE,
                        MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 
     if (mem_page == MAP_FAILED) {
-        return 1;  // Return 1 on failure (as expected by test code)
+        return 1;  /**/ Return 1 on failure (as expected by test code)*/
     }
-    //now to  initialize the free list with the total page size
+    /*now to  initialize the free list with the total page size*/
 
     free_list = (MemoryBlock*)mem_page;
     free_list->size = PAGESIZE;
@@ -48,7 +48,7 @@ int init_alloc() {
     free_list->next =  NULL;
     free_list->start = mem_page;
 
-    //Initialize the allocated_list to null
+    /*Initialize the allocated_list to null*/
     allocated_list = NULL;
 
     return 0;  // Success
@@ -59,8 +59,8 @@ int init_alloc() {
 memory mapped page back to the OS. This function must return 0 on success
 and a non-zero error code otherwise. */
 int cleanup(){
-    //use munmap to free page pointer 
-    if(mem_page == NULL){ //if page pointer is null, indicate error?
+    /*use munmap to free page pointer */
+    if(mem_page == NULL){ /*if page pointer is null, indicate error?*/
         return 1;
     }
     if(munmap(mem_page, PAGESIZE)){ // if munmap fails, return 1
@@ -78,7 +78,24 @@ and returns a char * pointer to the bu_er on a success. This function returns a
 NULL on failure (e.g., requested size is not a multiple of 8 bytes, or insu_icient
 free space). When successful, the returned pointer should point to a valid
 memory address within the 4KB page of the memory manager*/
-char *alloc(int);
+char *alloc(int size){
+    /*Error Handling*/
+    /*Check if size is mulutple of 8  byes*/
+    if(size % 8 !=0){
+        return NULL;
+    }
+    /* What if size is 0 or greater than page size. Return Null*/
+    if(size ==0 || size >4096){
+        return NULL;
+    }
+    /*Check for succficent free space . Seaarch free list for continous segments of memory that combined for suffirenct space*/
+    
+
+    return NULL;/*If no suitable block found, return Null*/
+}
+
+
+
 
 
 /*The function dealloc(char *) takes a pointer to a previously allocated
