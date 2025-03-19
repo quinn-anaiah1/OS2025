@@ -227,26 +227,24 @@ void print_memory_layout() {
 
     printf("\n===== MEMORY LAYOUT =====\n");
     
-    // Print allocated blocks
-    printf("Allocated blocks:\n");
-    current = allocated_list;
-    while (current) {
-        printf("[A %p - %p | %zu bytes] -> ", 
-               current->start, 
-               (char *)current->start + current->size, 
-               current->size);
-        current = current->next;
-    }
-    printf("NULL\n");
+ 
+   
 
     // Print free blocks
-    printf("Free blocks:\n");
+    printf("Memory blocks:\n");
     current = free_list;
     while (current) {
-        printf("[F %p - %p | %zu bytes] -> ", 
-               current->start, 
-               (char *)current->start + current->size, 
-               current->size);
+        if (current->is_free) {
+            printf("[F %p - %p | %zu bytes] -> ", 
+                   current->start, 
+                   (char *)current->start + current->size, 
+                   current->size);
+        } else {
+            printf("[A %p - %p | %zu bytes] -> ", 
+                   current->start, 
+                   (char *)current->start + current->size, 
+                   current->size);
+        }
         current = current->next;
     }
     printf("NULL\n");
