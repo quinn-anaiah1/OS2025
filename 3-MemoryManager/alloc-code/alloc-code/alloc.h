@@ -202,18 +202,26 @@ void merge_connecting_free_blocks(){
 /*The function dealloc(char *) takes a pointer to a previously allocated
 memory chunk, and frees up the entire chunk.*/
 void dealloc(char * ptr){
+
     if(!ptr) {
         printf("dealloc: Null pointer, ignoring\n");
         return;
     } /*Make sure ptr exists*/
+    printf("dealloc: Attempting to free pointer at %p\n", ptr);
 
     /* Find the allocated block*/
     MemoryBlock *prev = NULL;
     MemoryBlock *current = allocated_list;
 
-    while (current && current->start != ptr) {
+    while (current) {
+        printf("dealloc: Checking allocated block at %p\n", current->start);
+        if(current->start == ptr){
+            printf("dealloc: Found block at %p, freeing it\n", ptr);
+            break;
+        }
         prev = current;
         current = current->next;
+
     }
 
     if(!current) {
