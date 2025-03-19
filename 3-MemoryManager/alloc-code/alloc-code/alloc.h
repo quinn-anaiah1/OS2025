@@ -15,6 +15,7 @@ typedef struct MemoryBlock
     size_t size; // size of the memory block
     struct MemoryBlock *next;
     bool is_free;
+    void * refere;
     
 } MemoryBlock;
 //
@@ -48,6 +49,7 @@ int init_alloc() {
     free_list->is_free = true;
     free_list->next =  NULL;
     free_list->start = mem_page;
+    
 
     /*Initialize the allocated_list to null*/
     allocated_list = NULL;
@@ -132,6 +134,7 @@ char *alloc(int size){
 
            
             print_memory_layout();
+            current->refere = current->start
             return current->start;
         }
         prev = current; /*Iterate*/
@@ -182,7 +185,7 @@ void dealloc(char * ptr){
 
     while (current) {
         printf("dealloc: Checking allocated block at %p, ptr is %p\n", current->start, ptr); // Added print statement
-        if(current->start == ptr && current->is_free==false){
+        if(current->refere == ptr && current->is_free==false){
             printf("dealloc: Found block at %p, freeing it\n", ptr);
             current->is_free = true;
             merge_connecting_free_blocks();
