@@ -161,8 +161,8 @@ int main()
 	///////////////////////////
 
 	
-	// if(cleanup())
-	// 	return 1;	//munmap failed
+	if(cleanup())
+		return 1;	//munmap failed
 	// return 0;
 
 		/*** test 6 ***/
