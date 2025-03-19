@@ -148,4 +148,73 @@ char *alloc(int size){
 
 /*The function dealloc(char *) takes a pointer to a previously allocated
 memory chunk, and frees up the entire chunk.*/
-void dealloc(char *);
+void dealloc(char * ptr){
+    if(!ptr) return; /*Make sure ptr exists*/
+
+    /* Find the allocated block*/
+    MemoryBlock *prev = NULL;
+    MemoryBlock *current = allocated_list;
+
+    while (current && current->start != ptr) {
+        prev = current;
+        current = current->next;
+    }
+
+    if(!current) return; /*If ptr isnt in allocated list, return*/
+
+    /*Remove from allocated list*/
+    if (prev) {
+        prev->next = current->next;
+    } else {
+        allocated_list = current->next;
+    }
+
+    current->is_free = true;/*Mark as free*/
+
+    /*now to insert back to into free list, sorted*/
+    insert_into_freelist(current);
+
+    /*Merge any block that are adjacent*/
+    merge_connecting_free_blocks();
+}
+
+/* Inserts a freed block into the free list in sorted order
+ensures that the ree list remains sorted based on memory addresses*/
+
+void insert_into_freelist(MemoryBlock *block){
+    /*If freelist empty or block should be at begiining*/
+    if(!free_list || block->start < free_list-> start) {
+        block->next = free_list; /*Insert block at the start*/
+        free_list = block;
+        return;
+    }
+    MemoryBlock *prev = free_list;
+    MemoryBlock *current = free_list->next;
+
+    /*Traverse free list to find coresspojnng insertion point*/
+    while (current && block->start > current->start) {
+        prev = current;
+        current = current->next;
+    }
+
+    /*Insert block between previous and current*/
+    block->next = current;
+    prev->next = block;
+}
+
+void merge_connecting_free_blocks(){
+    MemoryBlock *current = free_list;
+
+    /*Traceerse freee list, checking for adjacent blocks*/
+    while (current && current->next) {
+        if ((char *)current->start + current->size == current->next->start) { /*If two block are adjacent*/
+            /*merge them*/
+            current->size += current->next->size;
+            current->next = current->next->next;
+        } else {
+            current = current->next;
+        }
+    }
+}
+
+
