@@ -110,6 +110,7 @@ char *alloc(int size){
                 current->is_free = false;
 
                 printf("alloc: Exact fit. Allocated %d bytes at %p\n", size, current->start);
+                current->refere = current->start;
                 return current->start;
             }
             /* Splitting the larger block*/
@@ -134,7 +135,7 @@ char *alloc(int size){
 
            
             print_memory_layout();
-            current->refere = current->start
+            current->refere = current->start;
             return current->start;
         }
         prev = current; /*Iterate*/
