@@ -161,9 +161,9 @@ int main()
 	///////////////////////////
 
 	
-	if(cleanup())
-		return 1;	//munmap failed
-	return 0;
+	// if(cleanup())
+	// 	return 1;	//munmap failed
+	// return 0;
 
 		/*** test 6 ***/
 
@@ -252,6 +252,9 @@ int main()
 	    printf("Test 10 failed: Cleanup failed\n");
 	}
 
+	// if(cleanup())
+	// 	return 1;	//munmap failed
+	// return 0;
 
 
 }
