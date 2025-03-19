@@ -145,30 +145,7 @@ char *alloc(int size){
 /* Inserts a freed block into the free list in sorted order
 ensures that the ree list remains sorted based on memory addresses*/
 
-void insert_into_freelist(MemoryBlock *block){
-    /*If freelist empty or block should be at begiining*/
-    if(!free_list || block->start < free_list-> start) {
-        block->next = free_list; /*Insert block at the start*/
-        free_list = block;
-        printf("insert_into_freelist: Inserted block at start, address %p\n", block->start);
-        return;
-    }
-    MemoryBlock *prev = free_list;
-    MemoryBlock *current = free_list->next;
 
-    /*Traverse free list to find coresspojnng insertion point*/
-    while (current && block->start > current->start) {
-        prev = current;
-        current = current->next;
-    }
-
-    /*Insert block between previous and current*/
-    block->next = current;
-    prev->next = block;
-
-    printf("insert_into_freelist: Inserted block at address %p between %p and %p\n",
-        block->start, prev->start, current ? current->start : NULL);
-}
 
 void merge_connecting_free_blocks(){
     MemoryBlock *current = free_list;

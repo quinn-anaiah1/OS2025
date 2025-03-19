@@ -14,6 +14,8 @@ int main()
 
 	char *str = alloc(512);
 	char *str2 = alloc(512);
+	printf("ALLOCATION COMPLETE");
+	print_memory_layout();
 
 	if(str == NULL || str2 == NULL)
 	{
