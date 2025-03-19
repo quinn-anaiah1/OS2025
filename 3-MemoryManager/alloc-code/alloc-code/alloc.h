@@ -136,6 +136,9 @@ char *alloc(int size){
             current->size = size;
             current->is_free = false;
 
+            printf("alloc: Split block. Allocated %d bytes at %p, remaining block at %p of size %ld\n",
+                size, current->start, new_free_block->start, new_free_block->size);
+
             /*Move allocated block to allocated list*/
             current->next = allocated_list;
             allocated_list = current;
