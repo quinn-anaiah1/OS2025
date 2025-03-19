@@ -81,8 +81,11 @@ int main()
 	  printf("Test 1 failed: A: %d, B: %d, C: %d, D: %d\n", strcmp(stringA, strA), strcmp(stringB, strB), strcmp(stringC, strC), strcmp(stringD, strD));
 
 	/**** test 2 ****/
+	print_memory_layout();
 	
+	printf("Starting Test 2");
 	dealloc(strC);
+	print_memory_layout();
 
 	char *strX = alloc(1024);
 	for(int i = 0; i < 1023; i++)
