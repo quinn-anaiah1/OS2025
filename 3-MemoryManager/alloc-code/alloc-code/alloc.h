@@ -112,9 +112,18 @@ char *alloc(int size){
                     free_list = current->next;
                 }
 
-                /* move to allocated list*/
-                current->next = allocated_list;
-                allocated_list = current;
+                /* move to allocated list, Append to the end of allocated_list*/
+                if (allocated_list == NULL) {
+                    allocated_list = current;
+                    current->next = NULL;
+                } else {
+                    MemoryBlock *last = allocated_list;
+                    while (last->next != NULL) {
+                        last = last->next;
+                    }
+                    last->next = current;
+                    current->next = NULL;
+                }
 
                 printf("alloc: Exact fit. Allocated %d bytes at %p\n", size, current->start);
                 return current->start;
@@ -139,9 +148,18 @@ char *alloc(int size){
             printf("alloc: Split block. Allocated %d bytes at %p, remaining block at %p of size %ld\n",
                 size, current->start, new_free_block->start, new_free_block->size);
 
-            /*Move allocated block to allocated list*/
-            current->next = allocated_list;
-            allocated_list = current;
+            /* move to allocated list, Append to the end of allocated_list*/
+            if (allocated_list == NULL) {
+                allocated_list = current;
+                current->next = NULL;
+            } else {
+                MemoryBlock *last = allocated_list;
+                while (last->next != NULL) {
+                    last = last->next;
+                }
+                last->next = current;
+                current->next = NULL;
+            };
             
             return current->start;
         }
