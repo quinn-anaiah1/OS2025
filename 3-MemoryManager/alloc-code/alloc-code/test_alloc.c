@@ -164,4 +164,94 @@ int main()
 	if(cleanup())
 		return 1;	//munmap failed
 	return 0;
+
+		/*** test 6 ***/
+
+	char *str1 = alloc(128);
+	char *str2 = alloc(256);
+	char *str3 = alloc(512);
+
+	if(str1 != NULL && str2 != NULL && str3 != NULL)
+	{
+    	printf("Test 6: Allocated 128, 256, 512 bytes\n");
+
+    	// Deallocate in a different order
+    	dealloc(str2);
+    	dealloc(str1);
+    	dealloc(str3);
+
+    	printf("Test 6 passed: Multiple deallocations in random order worked\n");
+	}
+	else
+	{
+    	printf("Test 6 failed: Allocation failed for one or more blocks\n");
+	}
+
+	/*** test 7 ***/
+
+	char *strBig = alloc(5000);  // Request more memory than the page size
+	if (strBig == NULL)
+	{
+    	printf("Test 7 passed: Allocation larger than page size failed\n");
+	}
+	else
+	{
+    	printf("Test 7 failed: Allocation larger than page size succeeded unexpectedly\n");
+	}
+
+	/*** test 8 ***/
+
+	char *str1 = alloc(1024);
+	char *str2 = alloc(1024);
+
+	dealloc(str1);
+	dealloc(str2);
+
+	char *strMerged = alloc(2048);  // Allocate the entire space after deallocation
+	if (strMerged != NULL)
+	{
+	    printf("Test 8 passed: Allocation worked after merging adjacent free blocks\n");
+	}
+	else
+	{
+	    printf("Test 8 failed: Allocation failed after merging adjacent free blocks\n");
+	}
+
+	/*** test 9 ***/
+
+	char *strSmall = alloc(8);  // Allocate minimum size
+	if (strSmall != NULL)
+	{
+	    printf("Test 9 passed: Allocated minimum size of 8 bytes\n");
+	    dealloc(strSmall);
+	}
+	else
+	{
+	    printf("Test 9 failed: Allocation failed for 8 bytes\n");
+	}
+
+	/*** test 10 ***/
+
+	if (cleanup() == 0)
+	{
+	    printf("Test 10: Cleanup successful\n");
+
+	    // Attempt to allocate after cleanup
+	    char *strAfterCleanup = alloc(128);
+	    if (strAfterCleanup == NULL)
+	    {
+	        printf("Test 10 passed: Allocation failed after cleanup\n");
+	    }
+	    else
+	    {
+	        printf("Test 10 failed: Allocation succeeded after cleanup\n");
+	    }
+	}
+	else
+	{
+	    printf("Test 10 failed: Cleanup failed\n");
+	}
+
+
+
 }

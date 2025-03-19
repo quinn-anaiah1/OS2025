@@ -1,0 +1,180 @@
+[03/19/25]seed@VM:~/.../alloc-code$ gcc -o test_alloc test_alloc.c
+[03/19/25]seed@VM:~/.../alloc-code$ ./test_alloc
+init_alloc: Successfully allocated 4096 bytes at 0x7fb50a75d000
+
+===== MEMORY LAYOUT =====
+[F 0x7fb50a75d000 - 0x7fb50a75e000 | 4096 bytes] -> NULL
+=========================
+
+alloc: Requesting 512 bytes
+alloc: Found block of size 4096 at 0x7fb50a75d000
+alloc: Split block. Allocated 512 bytes at 0x7fb50a75d000, remaining 3584 bytes at 0x7fb50a75d200
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d200 | 512 bytes] -> [F 0x7fb50a75d200 - 0x7fb50a75e000 | 3584 bytes] -> NULL
+=========================
+
+alloc: Requesting 512 bytes
+alloc: Found block of size 3584 at 0x7fb50a75d200
+alloc: Split block. Allocated 512 bytes at 0x7fb50a75d200, remaining 3072 bytes at 0x7fb50a75d400
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d200 | 512 bytes] -> [A 0x7fb50a75d200 - 0x7fb50a75d400 | 512 bytes] -> [F 0x7fb50a75d400 - 0x7fb50a75e000 | 3072 bytes] -> NULL
+=========================
+
+ALLOCATION COMPLETE
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d200 | 512 bytes] -> [A 0x7fb50a75d200 - 0x7fb50a75d400 | 512 bytes] -> [F 0x7fb50a75d400 - 0x7fb50a75e000 | 3072 bytes] -> NULL
+=========================
+
+Hello, world! test passed
+dealloc: Attempting to free pointer at 0x7fb50a75d000
+dealloc: Found block at 0x7fb50a75d000, freeing it
+
+===== MEMORY LAYOUT =====
+[F 0x7fb50a75d000 - 0x7fb50a75d200 | 512 bytes] -> [A 0x7fb50a75d200 - 0x7fb50a75d400 | 512 bytes] -> [F 0x7fb50a75d400 - 0x7fb50a75e000 | 3072 bytes] -> NULL
+=========================
+
+dealloc: Attempting to free pointer at 0x7fb50a75d200
+dealloc: Found block at 0x7fb50a75d200, freeing it
+merge: Merging blocks at 0x7fb50a75d000 and 0x7fb50a75d200
+merge: Merging blocks at 0x7fb50a75d000 and 0x7fb50a75d400
+
+===== MEMORY LAYOUT =====
+[F 0x7fb50a75d000 - 0x7fb50a75e000 | 4096 bytes] -> NULL
+=========================
+
+Elementary tests passed
+Starting comprehensive tests (see details in code)
+alloc: Requesting 1024 bytes
+alloc: Found block of size 4096 at 0x7fb50a75d000
+alloc: Split block. Allocated 1024 bytes at 0x7fb50a75d000, remaining 3072 bytes at 0x7fb50a75d400
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [F 0x7fb50a75d400 - 0x7fb50a75e000 | 3072 bytes] -> NULL
+=========================
+
+alloc: Requesting 1024 bytes
+alloc: Found block of size 3072 at 0x7fb50a75d400
+alloc: Split block. Allocated 1024 bytes at 0x7fb50a75d400, remaining 2048 bytes at 0x7fb50a75d800
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [A 0x7fb50a75d400 - 0x7fb50a75d800 | 1024 bytes] -> [F 0x7fb50a75d800 - 0x7fb50a75e000 | 2048 bytes] -> NULL
+=========================
+
+alloc: Requesting 1024 bytes
+alloc: Found block of size 2048 at 0x7fb50a75d800
+alloc: Split block. Allocated 1024 bytes at 0x7fb50a75d800, remaining 1024 bytes at 0x7fb50a75dc00
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [A 0x7fb50a75d400 - 0x7fb50a75d800 | 1024 bytes] -> [A 0x7fb50a75d800 - 0x7fb50a75dc00 | 1024 bytes] -> [F 0x7fb50a75dc00 - 0x7fb50a75e000 | 1024 bytes] -> NULL
+=========================
+
+alloc: Requesting 1024 bytes
+alloc: Found block of size 1024 at 0x7fb50a75dc00
+alloc: Exact fit. Allocated 1024 bytes at 0x7fb50a75dc00
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [A 0x7fb50a75d400 - 0x7fb50a75d800 | 1024 bytes] -> [A 0x7fb50a75d800 - 0x7fb50a75dc00 | 1024 bytes] -> [A 0x7fb50a75dc00 - 0x7fb50a75e000 | 1024 bytes] -> NULL
+=========================
+
+Test 1 passed: allocated 4 chunks of 1KB each
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [A 0x7fb50a75d400 - 0x7fb50a75d800 | 1024 bytes] -> [A 0x7fb50a75d800 - 0x7fb50a75dc00 | 1024 bytes] -> [A 0x7fb50a75dc00 - 0x7fb50a75e000 | 1024 bytes] -> NULL
+=========================
+
+Starting Test 2dealloc: Attempting to free pointer at 0x7fb50a75d800
+dealloc: Found block at 0x7fb50a75d800, freeing it
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [A 0x7fb50a75d400 - 0x7fb50a75d800 | 1024 bytes] -> [F 0x7fb50a75d800 - 0x7fb50a75dc00 | 1024 bytes] -> [A 0x7fb50a75dc00 - 0x7fb50a75e000 | 1024 bytes] -> NULL
+=========================
+
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [A 0x7fb50a75d400 - 0x7fb50a75d800 | 1024 bytes] -> [F 0x7fb50a75d800 - 0x7fb50a75dc00 | 1024 bytes] -> [A 0x7fb50a75dc00 - 0x7fb50a75e000 | 1024 bytes] -> NULL
+=========================
+
+alloc: Requesting 1024 bytes
+alloc: Found block of size 1024 at 0x7fb50a75d800
+alloc: Exact fit. Allocated 1024 bytes at 0x7fb50a75d800
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [A 0x7fb50a75d400 - 0x7fb50a75d800 | 1024 bytes] -> [A 0x7fb50a75d800 - 0x7fb50a75dc00 | 1024 bytes] -> [A 0x7fb50a75dc00 - 0x7fb50a75e000 | 1024 bytes] -> NULL
+=========================
+
+Test 2 passed: dealloc and realloc worked
+dealloc: Attempting to free pointer at 0x7fb50a75d400
+dealloc: Found block at 0x7fb50a75d400, freeing it
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [F 0x7fb50a75d400 - 0x7fb50a75d800 | 1024 bytes] -> [A 0x7fb50a75d800 - 0x7fb50a75dc00 | 1024 bytes] -> [A 0x7fb50a75dc00 - 0x7fb50a75e000 | 1024 bytes] -> NULL
+=========================
+
+alloc: Requesting 512 bytes
+alloc: Found block of size 1024 at 0x7fb50a75d400
+alloc: Split block. Allocated 512 bytes at 0x7fb50a75d400, remaining 512 bytes at 0x7fb50a75d600
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [A 0x7fb50a75d400 - 0x7fb50a75d600 | 512 bytes] -> [F 0x7fb50a75d600 - 0x7fb50a75d800 | 512 bytes] -> [A 0x7fb50a75d800 - 0x7fb50a75dc00 | 1024 bytes] -> [A 0x7fb50a75dc00 - 0x7fb50a75e000 | 1024 bytes] -> NULL
+=========================
+
+alloc: Requesting 512 bytes
+alloc: Found block of size 512 at 0x7fb50a75d600
+alloc: Exact fit. Allocated 512 bytes at 0x7fb50a75d600
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [A 0x7fb50a75d400 - 0x7fb50a75d600 | 512 bytes] -> [A 0x7fb50a75d600 - 0x7fb50a75d800 | 512 bytes] -> [A 0x7fb50a75d800 - 0x7fb50a75dc00 | 1024 bytes] -> [A 0x7fb50a75dc00 - 0x7fb50a75e000 | 1024 bytes] -> NULL
+=========================
+
+Test 3 passed: dealloc and smaller realloc worked
+dealloc: Attempting to free pointer at 0x7fb50a75d600
+dealloc: Found block at 0x7fb50a75d600, freeing it
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [A 0x7fb50a75d400 - 0x7fb50a75d600 | 512 bytes] -> [F 0x7fb50a75d600 - 0x7fb50a75d800 | 512 bytes] -> [A 0x7fb50a75d800 - 0x7fb50a75dc00 | 1024 bytes] -> [A 0x7fb50a75dc00 - 0x7fb50a75e000 | 1024 bytes] -> NULL
+=========================
+
+dealloc: Attempting to free pointer at 0x7fb50a75d400
+dealloc: Found block at 0x7fb50a75d400, freeing it
+merge: Merging blocks at 0x7fb50a75d400 and 0x7fb50a75d600
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [F 0x7fb50a75d400 - 0x7fb50a75d800 | 1024 bytes] -> [A 0x7fb50a75d800 - 0x7fb50a75dc00 | 1024 bytes] -> [A 0x7fb50a75dc00 - 0x7fb50a75e000 | 1024 bytes] -> NULL
+=========================
+
+alloc: Requesting 1024 bytes
+alloc: Found block of size 1024 at 0x7fb50a75d400
+alloc: Exact fit. Allocated 1024 bytes at 0x7fb50a75d400
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [A 0x7fb50a75d400 - 0x7fb50a75d800 | 1024 bytes] -> [A 0x7fb50a75d800 - 0x7fb50a75dc00 | 1024 bytes] -> [A 0x7fb50a75dc00 - 0x7fb50a75e000 | 1024 bytes] -> NULL
+=========================
+
+Test 4 passed: merge worked
+dealloc: Attempting to free pointer at 0x7fb50a75d800
+dealloc: Found block at 0x7fb50a75d800, freeing it
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [A 0x7fb50a75d400 - 0x7fb50a75d800 | 1024 bytes] -> [F 0x7fb50a75d800 - 0x7fb50a75dc00 | 1024 bytes] -> [A 0x7fb50a75dc00 - 0x7fb50a75e000 | 1024 bytes] -> NULL
+=========================
+
+dealloc: Attempting to free pointer at 0x7fb50a75d400
+dealloc: Found block at 0x7fb50a75d400, freeing it
+merge: Merging blocks at 0x7fb50a75d400 and 0x7fb50a75d800
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [F 0x7fb50a75d400 - 0x7fb50a75dc00 | 2048 bytes] -> [A 0x7fb50a75dc00 - 0x7fb50a75e000 | 1024 bytes] -> NULL
+=========================
+
+alloc: Requesting 2048 bytes
+alloc: Found block of size 2048 at 0x7fb50a75d400
+alloc: Exact fit. Allocated 2048 bytes at 0x7fb50a75d400
+
+===== MEMORY LAYOUT =====
+[A 0x7fb50a75d000 - 0x7fb50a75d400 | 1024 bytes] -> [A 0x7fb50a75d400 - 0x7fb50a75dc00 | 2048 bytes] -> [A 0x7fb50a75dc00 - 0x7fb50a75e000 | 1024 bytes] -> NULL
+=========================
+
+Test 5 passed: merge alloc 2048 worked
+cleanup: Memory released
