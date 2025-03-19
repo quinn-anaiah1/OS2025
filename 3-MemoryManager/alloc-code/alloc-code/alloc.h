@@ -153,7 +153,7 @@ void merge_connecting_free_blocks(){
 
     /*Traceerse freee list, checking for adjacent blocks*/
     while (current && current->next) {
-        if ((char *)current->start + current->size == current->next->start) { /*If two block are adjacent*/
+        if (current->is_free!=false && (char *)current->start + current->size == current->next->start) { /*If two block are adjacent*/
             /*merge them*/
             printf("merge_connecting_free_blocks: Merging blocks at %p and %p\n",
                 current->start, current->next->start);
