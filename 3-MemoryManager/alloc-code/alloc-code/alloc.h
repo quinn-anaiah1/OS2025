@@ -75,7 +75,7 @@ int cleanup(){
 
 /*The function alloc(int) takes an integer bu_er size that must be allocated
 and returns a char * pointer to the bu_er on a success. This function returns a
-NULL on failure (e.g., requested size is not a multiple of 8 bytes, or insu_icient
+NULL on failure (e.g.,                                                                                                                                                                                                                                                                                                                                                                                                     requested size is not a multiple of 8 bytes, or insu_icient
 free space). When successful, the returned pointer should point to a valid
 memory address within the 4KB page of the memory manager*/
 char *alloc(int size){
@@ -85,11 +85,59 @@ char *alloc(int size){
         return NULL;
     }
     /* What if size is 0 or greater than page size. Return Null*/
-    if(size ==0 || size >4096){
+    if(size <=0 || size >PAGESIZE){
         return NULL;
     }
     /*Check for succficent free space . Seaarch free list for continous segments of memory that combined for suffirenct space*/
     
+    MemoryBlock *prev = NULL;
+    MemoryBlock *current = free_list;
+
+    while (current) { /* Iterate through free list*/
+        if (current->size >= size) { /*Found a    block*/
+            /*Exact fit*/
+            if(current->size==size){
+                current->is_free = false;
+
+                /*Remove from free list*/
+                if(prev){ /*IF not at front of the list*/
+                    prev->next = current->next;
+                } else {/*If first node in list*/
+                    free_list = current->next;
+                }
+
+                /* move to allocated list*/
+                current->next = allocated_list;
+                allocated_list = current;
+
+                return current->start;
+            }
+            /* Splitting the larger block*/
+            MemoryBlock *remaining = current->next; /*Temporarily store next free block*/
+            MemoryBlock *new_free_block = (MemoryBlock *)((char *)current->start + size); /*Compute starting addresss of new block*/
+
+            new_free_block->start = (char *)current->start + size; /*comm*/
+            new_free_block->size = current->size - size;
+            new_free_block->is_free = true;
+            new_free_block->next = remaining;
+
+            /* Update free list*/
+            if (prev) prev->next = new_free_block;
+            else free_list = new_free_block;
+
+             /*Update allocated block */
+            current->size = size;
+            current->is_free = false;
+
+            /*Move allocated block to allocated list*/
+            current->next = allocated_list;
+            allocated_list = current;
+
+            return current->start;
+        }
+        prev = current; /*Iterate*/
+        current = current->next;
+    }
 
     return NULL;/*If no suitable block found, return Null*/
 }
