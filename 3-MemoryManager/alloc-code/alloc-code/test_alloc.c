@@ -168,7 +168,7 @@ int main()
 		/*** test 6 ***/
 
 	char *str1 = alloc(128);
-	char *str2 = alloc(256);
+	str2 = alloc(256);
 	char *str3 = alloc(512);
 
 	if(str1 != NULL && str2 != NULL && str3 != NULL)
@@ -201,8 +201,8 @@ int main()
 
 	/*** test 8 ***/
 
-	char *str1 = alloc(1024);
-	char *str2 = alloc(1024);
+	str1 = alloc(1024);
+	str2 = alloc(1024);
 
 	dealloc(str1);
 	dealloc(str2);
