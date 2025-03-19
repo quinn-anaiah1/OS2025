@@ -142,7 +142,7 @@ char *alloc(int size){
             /*Move allocated block to allocated list*/
             current->next = allocated_list;
             allocated_list = current;
-
+            
             return current->start;
         }
         prev = current; /*Iterate*/
@@ -214,7 +214,7 @@ void dealloc(char * ptr){
     MemoryBlock *current = allocated_list;
 
     while (current) {
-        printf("dealloc: Checking allocated block at %p\n", current->start);
+        printf("dealloc: Checking allocated block at %p, ptr is %p\n", current->start, ptr); // Added print statement
         if(current->start == ptr){
             printf("dealloc: Found block at %p, freeing it\n", ptr);
             break;
