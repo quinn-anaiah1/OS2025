@@ -53,6 +53,7 @@ int init_alloc() {
     allocated_list = NULL;
 
     printf("init_alloc: Successfully allocated %d bytes at %p\n", PAGESIZE, mem_page);
+    print_memory_layout();
     return 0;  // Success
 }
 
@@ -71,6 +72,7 @@ int cleanup(){
     mem_page = NULL; // reset pointer after freeeing memory
 
     //optional cleaning the linked list
+    print_memory_layout();
     return 0; // Success
 }
 
@@ -99,31 +101,11 @@ char *alloc(int size){
     MemoryBlock *current = free_list;
 
     while (current) { /* Iterate through free list*/
-        if (current->size >= size) { /*Found a    block*/
+        if (current->size >= size&& current->is_free==true) { /*Found a    block*/
             printf("alloc: Found block of size %ld at %p\n", current->size, current->start);
             /*Exact fit*/
             if(current->size==size){
                 current->is_free = false;
-
-                /*Remove from free list*/
-                if(prev){ /*IF not at front of the list*/
-                    prev->next = current->next;
-                } else {/*If first node in list*/
-                    free_list = current->next;
-                }
-
-                /* move to allocated list, Append to the end of allocated_list*/
-                if (allocated_list == NULL) {
-                    allocated_list = current;
-                    current->next = NULL;
-                } else {
-                    MemoryBlock *last = allocated_list;
-                    while (last->next != NULL) {
-                        last = last->next;
-                    }
-                    last->next = current;
-                    current->next = NULL;
-                }
 
                 printf("alloc: Exact fit. Allocated %d bytes at %p\n", size, current->start);
                 return current->start;
@@ -137,30 +119,19 @@ char *alloc(int size){
             new_free_block->is_free = true;
             new_free_block->next = remaining;
 
-            /* Update free list*/
-            if (prev) prev->next = new_free_block;
-            else free_list = new_free_block;
+            
 
              /*Update allocated block */
             current->size = size;
             current->is_free = false;
+            /* Update free list*/
+            current->next = new_free_block;
 
             printf("alloc: Split block. Allocated %d bytes at %p, remaining block at %p of size %ld\n",
                 size, current->start, new_free_block->start, new_free_block->size);
 
-            /* move to allocated list, Append to the end of allocated_list*/
-            if (allocated_list == NULL) {
-                allocated_list = current;
-                current->next = NULL;
-            } else {
-                MemoryBlock *last = allocated_list;
-                while (last->next != NULL) {
-                    last = last->next;
-                }
-                last->next = current;
-                current->next = NULL;
-            };
-            
+           
+            print_memory_layout();
             return current->start;
         }
         prev = current; /*Iterate*/
@@ -228,40 +199,26 @@ void dealloc(char * ptr){
     printf("dealloc: Attempting to free pointer at %p\n", ptr);
 
     /* Find the allocated block*/
-    MemoryBlock *prev = NULL;
     MemoryBlock *current = free_list;
 
     while (current) {
         printf("dealloc: Checking allocated block at %p, ptr is %p\n", current->start, ptr); // Added print statement
-        if(current->start == ptr){
+        if(current->start == ptr && current->is_free==false){
             printf("dealloc: Found block at %p, freeing it\n", ptr);
-            break;
+            current->is_free = true;
+            merge_connecting_free_blocks();
+            print_memory_layout();
+            return;
         }
-        print_memory_layout();
-        prev = current;
+        
         current = current->next;
 
     }
+    printf("dealloc: Pointer not found in allocated list\n");
 
-    if(!current) {
-        printf("dealloc: Pointer not found in allocated list\n");
-        return;
-    } /*If ptr isnt in allocated list, return*/
+    
 
-    /*Remove from allocated list*/
-    if (prev) {
-        prev->next = current->next;
-    } else {
-        allocated_list = current->next;
-    }
-
-    current->is_free = true;/*Mark as free*/
-
-    /*now to insert back to into free list, sorted*/
-    insert_into_freelist(current);
-
-    /*Merge any block that are adjacent*/
-    merge_connecting_free_blocks();
+    
 }
 
 
