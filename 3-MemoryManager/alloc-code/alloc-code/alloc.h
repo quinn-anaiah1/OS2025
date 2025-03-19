@@ -38,7 +38,7 @@ int init_alloc() {
                        MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 
     if (mem_page == MAP_FAILED) {
-        return 1;  /**/ Return 1 on failure (as expected by test code)*/
+        return 1;  /* Return 1 on failure (as expected by test code)*/
     }
     /*now to  initialize the free list with the total page size*/
 
@@ -143,41 +143,6 @@ char *alloc(int size){
 }
 
 
-
-
-
-/*The function dealloc(char *) takes a pointer to a previously allocated
-memory chunk, and frees up the entire chunk.*/
-void dealloc(char * ptr){
-    if(!ptr) return; /*Make sure ptr exists*/
-
-    /* Find the allocated block*/
-    MemoryBlock *prev = NULL;
-    MemoryBlock *current = allocated_list;
-
-    while (current && current->start != ptr) {
-        prev = current;
-        current = current->next;
-    }
-
-    if(!current) return; /*If ptr isnt in allocated list, return*/
-
-    /*Remove from allocated list*/
-    if (prev) {
-        prev->next = current->next;
-    } else {
-        allocated_list = current->next;
-    }
-
-    current->is_free = true;/*Mark as free*/
-
-    /*now to insert back to into free list, sorted*/
-    insert_into_freelist(current);
-
-    /*Merge any block that are adjacent*/
-    merge_connecting_free_blocks();
-}
-
 /* Inserts a freed block into the free list in sorted order
 ensures that the ree list remains sorted based on memory addresses*/
 
@@ -216,5 +181,40 @@ void merge_connecting_free_blocks(){
         }
     }
 }
+
+
+/*The function dealloc(char *) takes a pointer to a previously allocated
+memory chunk, and frees up the entire chunk.*/
+void dealloc(char * ptr){
+    if(!ptr) return; /*Make sure ptr exists*/
+
+    /* Find the allocated block*/
+    MemoryBlock *prev = NULL;
+    MemoryBlock *current = allocated_list;
+
+    while (current && current->start != ptr) {
+        prev = current;
+        current = current->next;
+    }
+
+    if(!current) return; /*If ptr isnt in allocated list, return*/
+
+    /*Remove from allocated list*/
+    if (prev) {
+        prev->next = current->next;
+    } else {
+        allocated_list = current->next;
+    }
+
+    current->is_free = true;/*Mark as free*/
+
+    /*now to insert back to into free list, sorted*/
+    insert_into_freelist(current);
+
+    /*Merge any block that are adjacent*/
+    merge_connecting_free_blocks();
+}
+
+
 
 
