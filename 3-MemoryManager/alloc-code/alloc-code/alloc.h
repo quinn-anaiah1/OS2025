@@ -171,7 +171,7 @@ memory chunk, and frees up the entire chunk.*/
 void dealloc(char * ptr){
     free_list->start = mem_page;
     free_list->size = free_list_head_size;
-    printf("freelist size", )
+    
     printf("Dealloc iniated");
     print_memory_layout();
 
