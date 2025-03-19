@@ -247,7 +247,7 @@ void print_memory_layout() {
     printf("Allocated blocks:\n");
     current = allocated_list;
     while (current) {
-        printf("[A %p - %p | %d bytes] -> ", 
+        printf("[A %p - %p | %zu bytes] -> ", 
                current->start, 
                (char *)current->start + current->size, 
                current->size);
@@ -259,7 +259,7 @@ void print_memory_layout() {
     printf("Free blocks:\n");
     current = free_list;
     while (current) {
-        printf("[F %p - %p | %d bytes] -> ", 
+        printf("[F %p - %p | %zu bytes] -> ", 
                current->start, 
                (char *)current->start + current->size, 
                current->size);

@@ -13,7 +13,9 @@ int main()
 		return 1;	//mmap failed
 
 	char *str = alloc(512);
+	print_memory_layout();
 	char *str2 = alloc(512);
+	print_memory_layout();
 
 	if(str == NULL || str2 == NULL)
 	{
