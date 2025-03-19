@@ -19,6 +19,7 @@ typedef struct MemoryBlock
 } MemoryBlock;
 //
 MemoryBlock *free_list =NULL;
+size_t free_list_head_size = 0;  // Global variable to store the size of the first block
 
 /*declare pointer for memory page*/
 static void *mem_page = NULL;
@@ -106,6 +107,7 @@ char *alloc(int size){
                 current->is_free = false;
 
                 printf("alloc: Exact fit. Allocated %d bytes at %p\n", size, current->start);
+                free_list_head_size = free_list->size;
                 return current->start;
             }
             /* Splitting the larger block*/
@@ -130,6 +132,7 @@ char *alloc(int size){
 
            
             print_memory_layout();
+            free_list_head_size = free_list->size;
             return current->start;
         }
         prev = current; /*Iterate*/
@@ -167,6 +170,8 @@ void merge_connecting_free_blocks(){
 memory chunk, and frees up the entire chunk.*/
 void dealloc(char * ptr){
     free_list->start = mem_page;
+    free_list->size = free_list_head_size;
+    printf("freelist size", )
     printf("Dealloc iniated");
     print_memory_layout();
 
