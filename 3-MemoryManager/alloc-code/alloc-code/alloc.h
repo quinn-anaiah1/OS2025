@@ -237,6 +237,7 @@ void dealloc(char * ptr){
             printf("dealloc: Found block at %p, freeing it\n", ptr);
             break;
         }
+        print_memory_layout();
         prev = current;
         current = current->next;
 
