@@ -32,6 +32,8 @@ int main()
 	
 	dealloc(str);
 	dealloc(str2);
+	cleanup();
+	
 
 	printf("Elementary tests passed\n");
 	

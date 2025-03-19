@@ -72,6 +72,7 @@ int cleanup(){
         return 1;
     }
     mem_page = NULL; // reset pointer after freeeing memory
+    free_list = NULL;
 
     //optional cleaning the linked list
     print_memory_layout();
