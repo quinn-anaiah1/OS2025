@@ -30,8 +30,9 @@ int main()
 	else
 	  printf("Hello, world! test passed\n");
 	
-	dealloc(str);
+	
 	dealloc(str2);
+	dealloc(str);
 	print_memory_layout();
 
 	printf("Elementary tests passed\n");
