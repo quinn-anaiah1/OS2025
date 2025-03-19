@@ -214,8 +214,8 @@ void dealloc(char * ptr){
     MemoryBlock *current = allocated_list;
 
     while (current) {
-        printf("dealloc: Checking allocated block at %p\n", current->start);
-        if(current->start == ptr){
+        printf("dealloc: Checking allocated block at %p\n", current->start, current->size);
+        if(ptr >= current->start && ptr < (char*)current->start + current->size){
             printf("dealloc: Found block at %p, freeing it\n", ptr);
             break;
         }
