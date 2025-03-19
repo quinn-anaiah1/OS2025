@@ -229,7 +229,7 @@ void dealloc(char * ptr){
 
     /* Find the allocated block*/
     MemoryBlock *prev = NULL;
-    MemoryBlock *current = allocated_list;
+    MemoryBlock *current = free_list;
 
     while (current) {
         printf("dealloc: Checking allocated block at %p, ptr is %p\n", current->start, ptr); // Added print statement
