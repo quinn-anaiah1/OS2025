@@ -238,5 +238,39 @@ void dealloc(char * ptr){
 }
 
 
+void print_memory_layout() {
+    MemoryBlock *current;
+
+    printf("\n===== MEMORY LAYOUT =====\n");
+    
+    // Print allocated blocks
+    printf("Allocated blocks:\n");
+    current = allocated_list;
+    while (current) {
+        printf("[A %p - %p | %d bytes] -> ", 
+               current->start, 
+               (char *)current->start + current->size, 
+               current->size);
+        current = current->next;
+    }
+    printf("NULL\n");
+
+    // Print free blocks
+    printf("Free blocks:\n");
+    current = free_list;
+    while (current) {
+        printf("[F %p - %p | %d bytes] -> ", 
+               current->start, 
+               (char *)current->start + current->size, 
+               current->size);
+        current = current->next;
+    }
+    printf("NULL\n");
+    
+    printf("=========================\n\n");
+}
+
+
+
 
 

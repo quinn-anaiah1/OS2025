@@ -30,6 +30,7 @@ int main()
 	
 	dealloc(str);
 	dealloc(str2);
+	print_memory_layout();
 
 	printf("Elementary tests passed\n");
 	
