@@ -191,6 +191,8 @@ void merge_connecting_free_blocks(){
 /*The function dealloc(char *) takes a pointer to a previously allocated
 memory chunk, and frees up the entire chunk.*/
 void dealloc(char * ptr){
+    printf("Dealloc iniated")
+    print_memory_layout();
 
     if(!ptr) {
         printf("dealloc: Null pointer, ignoring\n");
