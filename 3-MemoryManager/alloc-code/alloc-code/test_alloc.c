@@ -13,9 +13,7 @@ int main()
 		return 1;	//mmap failed
 
 	char *str = alloc(512);
-	print_memory_layout();
 	char *str2 = alloc(512);
-	print_memory_layout();
 
 	if(str == NULL || str2 == NULL)
 	{
@@ -30,10 +28,8 @@ int main()
 	else
 	  printf("Hello, world! test passed\n");
 	
-	
-	dealloc(str2);
 	dealloc(str);
-	print_memory_layout();
+	dealloc(str2);
 
 	printf("Elementary tests passed\n");
 	
