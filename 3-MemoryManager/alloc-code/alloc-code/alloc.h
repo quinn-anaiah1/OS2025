@@ -19,7 +19,7 @@ typedef struct MemoryBlock
 } MemoryBlock;
 //
 MemoryBlock *free_list =NULL;
-MemoryBlock *allocated_list = NULL;
+
 /*declare pointer for memory page*/
 static void *mem_page = NULL;
 /*function declarations*/ 
@@ -49,9 +49,7 @@ int init_alloc() {
     free_list->next =  NULL;
     free_list->start = mem_page;
 
-    /*Initialize the allocated_list to null*/
-    allocated_list = NULL;
-
+    
     printf("init_alloc: Successfully allocated %d bytes at %p\n", PAGESIZE, mem_page);
     print_memory_layout();
     return 0;  // Success
@@ -168,6 +166,7 @@ void merge_connecting_free_blocks(){
 /*The function dealloc(char *) takes a pointer to a previously allocated
 memory chunk, and frees up the entire chunk.*/
 void dealloc(char * ptr){
+    free_list->start = mem_page;
     printf("Dealloc iniated");
     print_memory_layout();
 
