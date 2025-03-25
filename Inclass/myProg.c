@@ -20,7 +20,7 @@ int main()
     pthread_t thread_id;
     int i= 0; 
     int N = getchar(); //ask user for how many threads
-    printf("Number of thread: %s \n", N);
+    printf("Number of thread: %d \n", N);
     printf("Before Thread\n");
     pthread_create(&thread_id, NULL, myThreadFun, "0");
     pthread_join(thread_id, NULL);
