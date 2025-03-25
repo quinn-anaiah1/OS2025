@@ -178,3 +178,12 @@ alloc: Exact fit. Allocated 2048 bytes at 0x7fb50a75d400
 
 Test 5 passed: merge alloc 2048 worked
 cleanup: Memory released
+
+alloc: Requesting 5000 bytes
+alloc: Invalid size request
+Test 6 passed: Allocation larger than page size failed
+cleanup: Memory released
+Test 7: Cleanup successful
+alloc: Requesting 128 bytes
+alloc: No suitable block found
+Test 7 passed: Allocation failed after cleanup
