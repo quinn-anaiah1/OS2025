@@ -10,7 +10,7 @@ int NUM_THREADS; // global variable storing number of threads
 void* myThreadFun(void* threadNum)
 {   
     int num = *(int *) threadNum;
-    printf("Printing Thread Num: %s \n", threadNum);
+    printf("Printing Thread Num: %d \n", threadNum);
     sleep(1);
     return NULL;
 }
