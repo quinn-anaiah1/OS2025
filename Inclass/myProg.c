@@ -4,13 +4,15 @@
 #include <unistd.h> //Header file for sleep(). man 3 sleep for details.
 
 int NUM_THREADS; // global variable storing number of threads
+pthread_mutex_t lock;
 
 // A normal C function that is executed as a thread
 // when its name is specified in pthread_create()
 void* myThreadFun(void* threadNum)
-{   
+{   pthread_mutex_lock(&lock);
     int num = *(int *) threadNum;
     printf("Printing Thread Num: %d \n", num);
+    pthread_mutex_unlock(&lock);
     sleep(1);
     return NULL;
 }
