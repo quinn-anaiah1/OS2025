@@ -9,8 +9,8 @@ int NUM_THREADS; // global variable storing number of threads
 // when its name is specified in pthread_create()
 void* myThreadFun(void* threadNum)
 {   
-    //int num = (int *) threadNum;
-    printf("Printing Thread Num: %s \n", (char*) threadNum);
+    int num = *(int *) threadNum;
+    printf("Printing Thread Num: %s \n", threadNum);
     sleep(1);
     return NULL;
 }
