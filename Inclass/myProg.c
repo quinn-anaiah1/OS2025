@@ -18,8 +18,16 @@ void* myThreadFun(void* threadNum)
 int main()
 {
     pthread_t thread_id;
+
     int i= 0; 
-    int N = getInt(); //ask user for how many threads
+    int N;
+    
+    printf("Enter the number of threads: ");
+    if (scanf("%d", &N) != 1) {
+        printf("Invalid input. Please enter a valid integer.\n");
+        return 1; // Return an error code
+    }
+    
     printf("Number of thread: %d \n", N);
     printf("Before Thread\n");
     pthread_create(&thread_id, NULL, myThreadFun, "0");
