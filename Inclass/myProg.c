@@ -17,6 +17,7 @@ void *myThreadFun(void *threadNum)
         int num = *(int *)threadNum;
         printf("Printing Thread Num: %d \n", num);
         pthread_mutex_unlock(&lock);
+        sleep(1);
     }
 
     
