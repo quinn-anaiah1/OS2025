@@ -18,7 +18,7 @@ void *myThreadFun(void *threadNum)
         pthread_mutex_lock(&lock);
 
         /*Wait until the current thread is num, waiting its term*/
-        while (curr_thread)
+        while (curr_thread!= num)
         {
             pthread_cond_wait(&cond, &lock); /*Put thread to sleep until its his turn*/
         }
