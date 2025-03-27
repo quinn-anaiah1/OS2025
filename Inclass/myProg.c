@@ -1,22 +1,42 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h> //Header file for sleep(). man 3 sleep for details.
+#include <unistd.h> /*Header file for sleep(). man 3 sleep for details.*/
 
-int NUM_THREADS; // global variable storing number of threads
-pthread_mutex_t lock;
+int NUM_THREADS; /* global variable storing number of threads*/
+pthread_mutex_t lock; /*initializeing the mutex lock*/
+pthread_cond_t cond; /*Conditiona vairbale to control execution order*/
+int curr_thread = 0; /*Needed to keep track of thread print order*/
 
-// A normal C function that is executed as a thread
-// when its name is specified in pthread_create()
+/* A normal C function that is executed as a thread*/
+/* when its name is specified in pthread_create()*/
 void *myThreadFun(void *threadNum)
 {
-
-    while (1 == 1)
+    int num = *(int *)threadNum;/*Get thread number*/
+    while (1) /*Infinite loop*/
     {
         pthread_mutex_lock(&lock);
-        int num = *(int *)threadNum;
+
+        /*Wait until the current thread is num, waiting its term*/
+        while (curr_thread)
+        {
+            pthread_cond_wait(&cond, &lock); /*Put thread to sleep until its his turn*/
+        }
+        
+        /* Now print the thread number*/
         printf("Printing Thread Num: %d \n", num);
-        pthread_mutex_unlock(&lock);
+
+        /* Update the curr_thread*/
+        if(curr_thread >= NUM_THREADS){
+            curr_thread = 0;
+        }else{
+            curr_thread +=1;
+        }
+        
+        /*Broadcast to wake all threads */
+        pthread_cond_broadcast(&cond);
+
+        pthread_mutex_unlock(&lock); /*unlock mutex*/        
         sleep(1);
     }
 
@@ -24,16 +44,16 @@ void *myThreadFun(void *threadNum)
     return NULL;
 }
 
-// each thread should print its own thread id
+/* each thread should print its own thread id*/
 int main()
 {
     int N;
-    // get the number of threads to create from user
+    /*get the number of threads to create from user*/ 
     printf("Enter the number of threads: ");
     if (scanf("%d", &N) != 1)
     {
         printf("Invalid input. Please enter a valid integer.\n");
-        return 1; // Return an error code
+        return 1; /* Return an error code*/
     }
 
     printf("Number of thread: %d \n", N);
