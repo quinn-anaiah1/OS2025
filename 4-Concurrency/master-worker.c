@@ -145,5 +145,9 @@ int main(int argc, char *argv[])
   free(master_thread_id);
   free(master_thread);
 
+  free(worker_thread_id);
+  free(worker_thread);
+  
+
   return 0;
 }
