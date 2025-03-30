@@ -31,12 +31,17 @@ void print_consumed(int num, int worker)
 /*Function that generates/produces items and place in buffer*/
 /*modify code below to synchronize correctly*/
 
+/* A mutex to synchronize access to item produce*/
+pthread_mutex_t item_to_produce_mutex;
+
 void *generate_requests_loop(void *data)
 {
   int thread_id = *((int *)data); /* Get thread ID from arguments*/
 
   while (1)
   {
+    pthread_mutex_lock(&item_to_produce_mutex)/*Lock mutex*/
+
     /* If all required items have been produced*/
     if (item_to_produce >= total_items)
     {
@@ -46,16 +51,21 @@ void *generate_requests_loop(void *data)
     buffer[curr_buf_size++] = item_to_produce;
     print_produced(item_to_produce, thread_id);
     item_to_produce++;
+
+    pthread_mutex_unlock(&item_to_produce_mutex);
   }
   return 0;
 }
 
+pthread_mutex_t item_to_consume_mutex;
 // write function to be run by worker threads
 // ensure that the workers call the function print_consumed when they consume an item
 void *consume_requests_loop(void *data){
   int thread_id = *((int *)data); /* Get thread ID from arguments*/
 
   while(1){
+
+    pthread_mutex_lock(&item_to_consume_mutex)
     /*If there are no times left to consume, break*/
     if(item_to_consume >= total_items){
       break;
@@ -65,6 +75,8 @@ void *consume_requests_loop(void *data){
         print_consumed(item, thread_id);
         item_to_consume++; 
     }
+
+    pthread_mutex_unlock(&item_to_consume_mutex);
    }
    return 0;
 }
