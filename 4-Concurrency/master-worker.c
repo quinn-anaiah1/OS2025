@@ -40,7 +40,7 @@ void *generate_requests_loop(void *data)
 
   while (1)
   {
-    pthread_mutex_lock(&item_to_produce_mutex)/*Lock mutex*/
+    pthread_mutex_lock(&item_to_produce_mutex);/*Lock mutex*/
 
     /* If all required items have been produced*/
     if (item_to_produce >= total_items)
@@ -65,7 +65,7 @@ void *consume_requests_loop(void *data){
 
   while(1){
 
-    pthread_mutex_lock(&item_to_consume_mutex)
+    pthread_mutex_lock(&item_to_consume_mutex);
     /*If there are no times left to consume, break*/
     if(item_to_consume >= total_items){
       break;
