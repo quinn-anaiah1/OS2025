@@ -27,8 +27,8 @@ void *myThreadFun(void *threadNum)
         printf("Printing Thread Num: %d \n", num);
 
         /* Update the curr_thread*/
-        if(curr_thread == NUM_THREADS-1){
-            curr_thread = 0;
+        if(curr_thread == NUM_THREADS-1){ 
+            curr_thread = 0; /* If out of range, circle back to 0*/
         }else{
             curr_thread +=1;
         }
