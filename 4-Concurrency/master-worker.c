@@ -36,9 +36,6 @@ void print_consumed(int num, int worker)
 /*Function that generates/produces items and place in buffer*/
 /*modify code below to synchronize correctly*/
 
-/* A mutex to synchronize access to item produce*/
-
-
 void *generate_requests_loop(void *data)
 {
   int thread_id = *((int *)data); /* Get thread ID from arguments*/
