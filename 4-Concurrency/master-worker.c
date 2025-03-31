@@ -14,6 +14,11 @@ int total_items, max_buf_size, num_workers, num_masters;
 /* shared buffer*/
 int *buffer;
 
+/*Synchronization variables*/
+pthread_mutex_t buffer_mutex = PTHREAD_MUTEX_INITIALIZER; /*Protecting access to shared buffer*/
+pthread_cond_t buffer_not_full =PTHREAD_COND_INITIALIZER; /*Signals producers that buffer isnt full*/
+pthread_cond_t buffer_not_empty = PTHREAD_COND_INITIALIZER; /*Signals consumers that buffer isnt empty*/
+
 /* Function to prin a produced item*/
 void print_produced(int num, int master)
 {
@@ -32,19 +37,22 @@ void print_consumed(int num, int worker)
 /*modify code below to synchronize correctly*/
 
 /* A mutex to synchronize access to item produce*/
-pthread_mutex_t item_to_produce_mutex;
+
 
 void *generate_requests_loop(void *data)
 {
   int thread_id = *((int *)data); /* Get thread ID from arguments*/
 
-  while (1)
-  {
-    pthread_mutex_lock(&item_to_produce_mutex);/*Lock mutex*/
+  while (1){
+    pthread_mutex_lock(&buffer_mutex);/*Lock buffer mutex*/
 
-    /* If all required items have been produced*/
-    if (item_to_produce >= total_items)
-    {
+
+    while(curr_buf_size == max_buf_size){ /* Wait if the buffer is currently full*/
+      pthread_cond_wait(&buffer_not_full, &buffer_mutex);/* Wait for the signal that the buffer isnt full*/
+    }
+    /* If all required items have been produced, exit loop*/
+    if (item_to_produce >= total_items){
+      pthread_mutex_unlock(&buffer_mutex); /* Unlock before exiting*/
       break;
     }
     /* Adds item to buffer*/
@@ -52,12 +60,13 @@ void *generate_requests_loop(void *data)
     print_produced(item_to_produce, thread_id);
     item_to_produce++;
 
-    pthread_mutex_unlock(&item_to_produce_mutex);
+    pthread_cond_signal(&buffer_not_empty);/*Signal that the buffer isnt empty*/
+    pthread_mutex_unlock(&buffer_mutex); /* Unlock so other threads can access the buffer*/
   }
   return 0;
 }
 
-pthread_mutex_t item_to_consume_mutex;
+
 // write function to be run by worker threads
 // ensure that the workers call the function print_consumed when they consume an item
 void *consume_requests_loop(void *data){
@@ -65,19 +74,27 @@ void *consume_requests_loop(void *data){
 
   while(1){
 
-    pthread_mutex_lock(&item_to_consume_mutex);
+    pthread_mutex_lock(&buffer_mutex); /* Lock access to the shared buffer */
+    
+    while(curr_buf_size == 0){ /* If buffer is empty, wait*/
+      pthread_cond_wait(&buffer_not_empty, &buffer_mutex);
+    }
+    
     /*If there are no times left to consume, break*/
     if(item_to_consume >= total_items){
+      pthread_mutex_unlock(&buffer_mutex);
       break;
     }
-    if(curr_buf_size >0){ /*Is there something to consume*/
-        int item = buffer[--curr_buf_size]; /* Remove item from buffer*/
-        print_consumed(item, thread_id);
-        item_to_consume++; 
-    }
+    
+    /*Remove item from buffer*/
+    int item = buffer[--curr_buf_size]; /* Remove item from buffer*/
+    print_consumed(item, thread_id);
+    item_to_consume++; 
 
-    pthread_mutex_unlock(&item_to_consume_mutex);
-   }
+    /* Signal that the buffer now has space*/
+    pthread_cond_signal(&buffer_not_full);
+    pthread_mutex_unlock(&buffer_mutex);
+    }
    return 0;
 }
 
