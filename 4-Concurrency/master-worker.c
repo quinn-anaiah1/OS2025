@@ -10,6 +10,7 @@
 /* Global variables for tracking production and consumption*/
 int item_to_produce, item_to_consume, curr_buf_size;
 int total_items, max_buf_size, num_workers, num_masters;
+int done_producing = 0; /*A flag to indicate when all producers are done*/
 
 /* shared buffer*/
 int *buffer;
@@ -49,6 +50,8 @@ void *generate_requests_loop(void *data)
     }
     /* If all required items have been produced, exit loop*/
     if (item_to_produce >= total_items){
+      done_producing = 1; /* Indicate the productions is complete*/
+      pthread_cond_broadcast(&buffer_not_empty); /*Wake all wating worker threads*/
       pthread_mutex_unlock(&buffer_mutex); /* Unlock before exiting*/
       break;
     }
@@ -73,7 +76,7 @@ void *consume_requests_loop(void *data){
 
     pthread_mutex_lock(&buffer_mutex); /* Lock access to the shared buffer */
     
-    while(curr_buf_size == 0){ /* If buffer is empty, wait*/
+    while(curr_buf_size == 0 && !done_producing){ /* If buffer is empty and producers still running, wait*/
       pthread_cond_wait(&buffer_not_empty, &buffer_mutex);
     }
     
