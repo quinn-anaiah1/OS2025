@@ -1,3 +1,12 @@
+/*
+ * File: master-worker.c
+ * Author: Anaiah Quinn
+ * Date: 20254-3-31
+ * Description: Producer Consumer on shared buffer implementation for assignment -4 concurrency
+ *
+ */
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -98,7 +107,7 @@ void *consume_requests_loop(void *data){
    return 0;
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[]) /* Format:./master-worker #total_items #max_buf_size #num_workers #masters e.g. ./exe 10000 1000 4 3 */
 {
   int *master_thread_id;
   pthread_t *master_thread;
